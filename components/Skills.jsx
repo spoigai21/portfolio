@@ -18,9 +18,6 @@ export default function Skills() {
         <Reveal>
           <p className="eyebrow">{"// skills"}</p>
           <h2 className="section-title">Languages &amp; frameworks</h2>
-          <p className={styles.hint}>
-            Hover an orb to reveal the tool. Drag to look around.
-          </p>
         </Reveal>
       </div>
 
