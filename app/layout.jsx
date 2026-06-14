@@ -5,6 +5,7 @@ import {
   Syne,
   Bree_Serif,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -62,6 +63,7 @@ export default function RootLayout({ children }) {
         className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable}`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
