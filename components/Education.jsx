@@ -30,7 +30,7 @@ export default function Education() {
             Grab the one-page résumé, or reach out at{" "}
             <a href={`mailto:${profile.email}`}>{profile.email}</a>.
           </p>
-          <a href="/resume.pdf" className={styles.download} download>
+          <a href="/shayan-resume.pdf" className={styles.download} download>
             Download résumé ↓
           </a>
         </Reveal>

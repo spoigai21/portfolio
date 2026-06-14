@@ -45,7 +45,7 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="/resume.pdf"
+            href="/shayan-resume.pdf"
             className={styles.resume}
             onClick={() => setOpen(false)}
           >
