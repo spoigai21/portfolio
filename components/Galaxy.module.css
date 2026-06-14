@@ -1,0 +1,28 @@
+/* Sits behind everything; deep indigo void shows through the transparent canvas. */
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      130% 100% at 50% 45%,
+      #160a3a 0%,
+      #0c0628 55%,
+      #07041a 100%
+    ),
+    var(--void);
+  overflow: hidden;
+  /* scroll-driven opacity is set from JS; this just smooths fast scrolls */
+  transition: opacity 0.18s linear;
+}
+
+.wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* r3f sets pointer-events:auto inline on its canvas wrapper; force it off so
+   this background never intercepts clicks/hovers meant for the content. */
+.wrap * {
+  pointer-events: none !important;
+}

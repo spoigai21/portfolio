@@ -1,0 +1,152 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* The interactive 3D scene fills the hero and receives drag/orbit input. */
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.scene canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none; /* allow touch-drag to orbit on mobile */
+}
+
+.canvasFallback {
+  position: absolute;
+  inset: 0;
+}
+
+/* 2D overlay sits above the canvas but lets pointer events fall through,
+   so users can drag anywhere; only the links/buttons are clickable. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+  padding-bottom: clamp(90px, 16vh, 160px);
+}
+
+.overlayInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 40ch;
+}
+
+.eyebrow {
+  color: var(--text-dim);
+}
+
+.role {
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 8px 0 0;
+}
+
+.tagline {
+  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+  /* soft lavender-white, clean and readable, no glow */
+  color: #efeaff;
+  margin: 16px 0 0;
+  line-height: 1.5;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+  pointer-events: auto; /* clickable */
+}
+
+.primary,
+.secondary {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 13px 26px;
+  border-radius: 999px;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.primary {
+  background: linear-gradient(120deg, var(--violet), var(--indigo));
+  color: var(--text-bright);
+  font-weight: 700;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.45);
+}
+
+.secondary {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.secondary:hover {
+  background: rgba(255, 23, 68, 0.08);
+}
+
+.hint {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 26px 0 0;
+}
+
+.scrollCue {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-dim);
+}
+
+.scrollLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(var(--accent), transparent);
+  animation: scrollPulse 2.2s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes scrollPulse {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}

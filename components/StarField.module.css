@@ -1,0 +1,34 @@
+/* Both layers are fixed, full-viewport, and never capture pointer events
+   (clicks/scroll/hover pass straight through to the page). */
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  /* scroll-driven opacity is set from JS; this just smooths fast scrolls */
+  transition: opacity 0.18s linear;
+}
+
+/* r3f sets pointer-events:auto inline on its canvas wrapper, which would make
+   this full-screen layer swallow all clicks/hovers. Force it off so events
+   pass through to the content (e.g. the hoverable skill orbs). */
+.layer * {
+  pointer-events: none !important;
+}
+
+.layer canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Above the page content (z-index 1) but below the nav (z-index 50): orbs on
+   the camera side of the text plane are drawn here, in front of text. */
+.front {
+  z-index: 30;
+}
+
+/* Above the aurora (z-index 0) but below page content: orbs on the far side of
+   the text plane are drawn here, so the text occludes them — they read as
+   genuinely behind the text. */
+.back {
+  z-index: 0;
+}

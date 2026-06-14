@@ -1,0 +1,64 @@
+﻿Shayan Poigai[a]
+5107388155 | spoigai21@gmail.com | Fremont, California | LinkedIn | GitHub
+
+
+Experience
+Incoming SWE Intern @ HerbsPro
+
+
+Co-Founder & Principal Software Engineer | Adorus (Jewelry E-commerce startup) | May 2026 - Present
+* Architecting and building a full-stack jewelry e-commerce platform from the ground up, leading both frontend and backend development
+* Developing responsive frontend interfaces using React.js and Node.js
+* Building RESTful backend services with Java Spring Boot and a PostgreSQL database
+* Deploying and managing the application on AWS EC2 infrastructure
+Machine Learning Research Assistant | Santa Clara University | December 2025 — June 2026
+* Analyzing public sentiment toward using LLMs as a therapeutic tool, contributing to a multi-part academic paper
+* Scraped and processed 5,000+ social media posts from Twitter, Reddit, and YouTube across mental health and AI-related communities
+* Architected an NLP pipeline to analyze 5000+ social media posts from Twitter, Reddit, and Youtube using unsupervised topic modeling (BERTopic, LDA, NMF)
+* Optimized data preprocessing using Pandas to normalize unstructured text, reducing noise in high-dimensional social media datasets
+* Created visual analytics (Matplotlib, Seaborn) revealing linguistic patterns and shifts in public attitudes toward AI-based mental health support
+* Paper submitted to ASONAM by IEEE 2026, with results expected in mid-July 2026
+
+
+Computer Science Lab Teaching Assistant | Santa Clara University | September 2025 — March 2026
+* Mentored 40+ students in C++ memory management, pointers, and OOP principles, resulting in improved lab completion rates
+* Debug complex logic errors in real-time, teaching students to utilize GDB and systematic testing to reduce technical debt in their coursework
+* Collaborated with faculty to streamline lab delivery and ensure 100% alignment with core curriculum objectives
+
+
+Theory of Algorithms Grader | Santa Clara University | March 2026 — June 2026
+* Graded assignments for 40+ students across 2 sections of Theory of Algorithms
+* Evaluated correctness and efficiency of solutions in runtime analysis, divide & conquer, greedy algorithms, and dynamic programming
+* Provided clear, structured feedback and applied consistent grading rubrics to ensure fairness and improve student understanding
+Projects
+Disease Tracker | React/Node, FastAPI, AWS | October 2025 
+* Developed a FastAPI RESTful API to serve real-time disease metrics and risk assessments with low-latency response times
+* Integrated AWS Bedrock to engineer an automated, AI-assisted risk-scoring pipeline for public health data
+* Designed DynamoDB NoSQL schemas to ensure scalable data ingestion and seamless backend-to-front-end communication
+
+
+Social Network Project | C++, QT | September 2025
+* Built a desktop social networking program in C++/QT with a GUI displaying user profiles, posts, and comments, applying MVC to separate UI from backend logic
+* Implemented file I/O for persistent storage of users, friendships, posts, and comments, using OOP principles
+* Modeled friendships with custom graph data structure and used BFS traversal to generate friend suggestions
+* Automated multi-file builds with a Makefile
+
+
+Kuhn Poker vs Quantum (Github | Live) | Qiskit, IBM Quantum, FastAPI, React, Vercel, Render | June 2026
+* Built a poker game where users play against an opponent whose strategy is discovered by a 6-qubit quantum circuit using superposition and entanglement, optimized via Qiskit
+* Developed a full-stack application with a FastAPI backend and React frontend, deployed on Render and Vercel
+* Integrated the IBM Quantum API to execute the circuit on real quantum computing hardware and compare results against simulation
+
+
+Agentic RAG Pipeline | Python, ChromaDB, Ollama, MCP | July 2025
+* Engineered a modular RAG framework using Ollama and ChromaDB for semantic search across dynamic datasets
+* Built an MCP (Model Context Protocol) Server to expose local data as tools for AI agents via JSON-RPC
+* Designed a modular, extensible codebase that supports integration of new datasets with minimal refactoring
+Education & Skills
+Santa Clara University | B.S. in Computer Science | Expected Fall 2027 | Major GPA: 4.0/4.0
+
+
+Coursework: Advanced Algorithms, Data Structures & Algorithms, Advanced C++, Linear Algebra, Theory of Automata, Discrete Mathematics
+
+
+Skills: C++, Python, Java, SQL, NoSQL, FastAPI, SpringBoot, AWS, RAG, MCP, NLP, Docker, Linux, QT, React.js, Node.js, DynamoDB, ChromaDB, GitHub, OOP
