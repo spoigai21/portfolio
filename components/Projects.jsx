@@ -25,6 +25,27 @@ function ProjectImage({ src, alt }) {
   );
 }
 
+// Renders a project's mini case study as labeled story beats.
+function CaseStudy({ study }) {
+  const beats = [
+    { label: "Problem", text: study.problem },
+    { label: "Hardest call", text: study.decision },
+    { label: "What broke", text: study.broke },
+    { label: "What I learned", text: study.learned },
+  ].filter((b) => b.text);
+
+  return (
+    <dl className={styles.caseStudy}>
+      {beats.map((b) => (
+        <div key={b.label} className={styles.beat}>
+          <dt className={styles.beatLabel}>{b.label}</dt>
+          <dd className={styles.beatText}>{b.text}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 export default function Projects() {
   return (
     <section className="section" id="projects">
@@ -43,11 +64,24 @@ export default function Projects() {
                 <h3 className={styles.name}>{p.name}</h3>
                 <p className={styles.desc}>{p.description}</p>
 
+                {p.caseStudy && <CaseStudy study={p.caseStudy} />}
+
                 <ul className={styles.tags}>
                   {p.tags.map((t) => (
                     <li key={t}>{t}</li>
                   ))}
                 </ul>
+
+                {p.links?.live && (
+                  <a
+                    href={p.links.live}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.tryLive}
+                  >
+                    ▶ Try it live ↗
+                  </a>
+                )}
 
                 {p.links && (
                   <div className={styles.links}>

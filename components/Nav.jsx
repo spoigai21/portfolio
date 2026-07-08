@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import styles from "./Nav.module.css";
 
 const sections = [
-  { id: "work", label: "Work" },
+  { id: "about", label: "About" },
   { id: "projects", label: "Projects" },
+  { id: "work", label: "Work" },
   { id: "skills", label: "Skills" },
-  { id: "education", label: "Education" },
+  { id: "writing", label: "Writing" },
 ];
 
 export default function Nav() {
@@ -24,7 +25,7 @@ export default function Nav() {
   return (
     <header className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={`container ${styles.inner}`}>
-        <a href="#top" className={styles.brand} onClick={() => setOpen(false)}>
+        <a href="/#top" className={styles.brand} onClick={() => setOpen(false)}>
           SP<span className={styles.dot}>.</span>
         </a>
 
@@ -40,7 +41,7 @@ export default function Nav() {
 
         <nav className={`${styles.links} ${open ? styles.linksOpen : ""}`}>
           {sections.map((s) => (
-            <a key={s.id} href={`#${s.id}`} onClick={() => setOpen(false)}>
+            <a key={s.id} href={`/#${s.id}`} onClick={() => setOpen(false)}>
               {s.label}
             </a>
           ))}

@@ -25,22 +25,94 @@
   height: clamp(380px, 56vh, 560px);
 }
 
-/* Plain DOM tooltip inside the canvas wrapper; positioned at the cursor from JS. */
+/* Cursor-following hologram tooltip. Positioning (left/top/display) is still set
+   from JS in SkillOrbs.jsx — only the appearance is defined here. Reads as a live
+   projected readout: cyan glow text, glassy panel, scanlines, bracket accents. */
 .tip {
   position: absolute;
-  transform: translate(-50%, calc(-100% - 14px));
+  transform: translate(-50%, calc(-100% - 16px));
   pointer-events: none;
   user-select: none;
   white-space: nowrap;
   z-index: 10;
+
   font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  color: var(--text-bright);
-  background: rgba(12, 6, 40, 0.92);
-  border: 1px solid rgba(255, 23, 68, 0.5);
-  border-radius: 8px;
-  padding: 7px 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5),
-    0 0 18px rgba(255, 23, 68, 0.3);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+
+  color: #e6feff;
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.95),
+    0 0 14px rgba(33, 230, 255, 0.6), 0 0 28px rgba(33, 230, 255, 0.35);
+
+  /* translucent glass panel + faint horizontal scanlines */
+  background: linear-gradient(rgba(6, 22, 30, 0.62), rgba(6, 22, 30, 0.62)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(33, 230, 255, 0.14) 0,
+      rgba(33, 230, 255, 0.14) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  border: 1px solid rgba(33, 230, 255, 0.55);
+  border-radius: 6px;
+  padding: 7px 14px;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+
+  /* glowing edge + inner cyan bloom */
+  box-shadow: 0 0 0 1px rgba(33, 230, 255, 0.12),
+    0 0 20px rgba(33, 230, 255, 0.45),
+    inset 0 0 14px rgba(33, 230, 255, 0.16);
+
+  /* slow flicker/pulse so it reads as a live projection */
+  animation: tipFlicker 3.4s ease-in-out infinite;
+}
+
+/* subtle bracket accents around the label, e.g. [ REACT.JS ] */
+.tip::before,
+.tip::after {
+  color: rgba(33, 230, 255, 0.72);
+  text-shadow: 0 0 8px rgba(33, 230, 255, 0.7);
+}
+.tip::before {
+  content: "[ ";
+}
+.tip::after {
+  content: " ]";
+}
+
+@keyframes tipFlicker {
+  0%,
+  100% {
+    opacity: 0.96;
+    filter: brightness(1);
+  }
+  /* gentle pulse */
+  50% {
+    opacity: 1;
+    filter: brightness(1.12);
+  }
+  /* quick hologram flickers */
+  8%,
+  10% {
+    opacity: 0.82;
+  }
+  9% {
+    opacity: 1;
+  }
+  72%,
+  74% {
+    opacity: 0.86;
+  }
+  73% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip {
+    animation: none;
+  }
 }

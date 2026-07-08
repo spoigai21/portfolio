@@ -7,6 +7,8 @@
 
   /* The single pop of contrast against all the purple */
   --accent: #ff1744;
+  /* Electric cyan — hologram accent (Skills tooltip + orbs) */
+  --cyan: #21e6ff;
 
   --text-bright: #f4f0ff; /* headings */
   --text-body: #efeaff; /* body / paragraphs */

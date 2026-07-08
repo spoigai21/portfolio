@@ -7,7 +7,9 @@ import * as THREE from "three";
 import { skills } from "@/lib/content";
 import styles from "./Skills.module.css";
 
-const PALETTE = [0x7c3aed, 0x4338ca, 0xff1744];
+// Orb tints — cyan folded in to match the holographic tooltip.
+const PALETTE = [0x7c3aed, 0x4338ca, 0x21e6ff, 0xff1744];
+const HOVER_EMISSIVE = 0x21e6ff; // cyan flash on the hovered orb
 const SPACING = 2.5;
 const LOGO_PX = 256; // rasterization resolution for each logo
 
@@ -91,6 +93,8 @@ function Orb({ position, color, logo, index, hovered, onHover, reduced }) {
   const phase = useMemo(() => Math.random() * Math.PI * 2, []);
   const isHovered = hovered === index;
   const texture = useLogoTexture(logo);
+  const baseColor = useMemo(() => new THREE.Color(color), [color]);
+  const hoverColor = useMemo(() => new THREE.Color(HOVER_EMISSIVE), []);
 
   useFrame((state, delta) => {
     if (!group.current) return;
@@ -110,13 +114,16 @@ function Orb({ position, color, logo, index, hovered, onHover, reduced }) {
 
     if (sphere.current) {
       const mat = sphere.current.material;
-      const target = isHovered ? 1.5 : 0.5;
+      const target = isHovered ? 1.6 : 0.5;
       mat.emissiveIntensity = THREE.MathUtils.damp(
         mat.emissiveIntensity,
         target,
         8,
         delta
       );
+      // flash the hovered orb cyan to match the tooltip, ease back to base tint
+      const k = 1 - Math.exp(-8 * delta);
+      mat.emissive.lerp(isHovered ? hoverColor : baseColor, k);
     }
   });
 
