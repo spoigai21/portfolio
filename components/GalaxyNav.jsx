@@ -12,14 +12,15 @@ import styles from "./GalaxyNav.module.css";
 // Destinations as planets. Orbits are spread wide so the sun sits clearly alone
 // at the center and the labels never crowd each other. Roughly Keplerian:
 // inner planets sweep faster than outer ones.
-// Wide, staggered orbits — big radial gaps + spread phases so the sun sits alone
-// at the center and no two planet labels crowd each other.
+// Wide, staggered orbits with distinct inclinations (each orbit tilted a
+// different way) so the planets occupy separate bands — no label touches
+// another label, a planet, or the sun.
 const PLANETS = [
-  { label: "Contact", href: "/contact", type: "molten", size: 0.44, radius: 2.8, phase: 0.0 },
-  { label: "Current work", href: "/writing", type: "rock", size: 0.52, radius: 4.3, phase: 2.6 },
-  { label: "Skills", href: "/skills", type: "ice", size: 0.48, radius: 5.8, phase: 5.1 },
-  { label: "About", href: "/about", type: "emerald", size: 0.62, radius: 7.3, phase: 1.3 },
-  { label: "Projects/Experience", href: "/projects", type: "gas", size: 0.95, radius: 8.9, phase: 3.8 },
+  { label: "Contact", href: "/contact", type: "molten", size: 0.46, radius: 3.4, phase: 0.0, incl: 0.16 },
+  { label: "Now", href: "/writing", type: "rock", size: 0.54, radius: 4.9, phase: 2.5, incl: -0.24 },
+  { label: "Skills", href: "/skills", type: "ice", size: 0.5, radius: 6.3, phase: 5.0, incl: 0.28 },
+  { label: "About", href: "/about", type: "emerald", size: 0.64, radius: 7.8, phase: 1.2, incl: -0.18 },
+  { label: "Work", href: "/projects", type: "gas", size: 0.98, radius: 9.4, phase: 3.9, incl: 0.12 },
 ];
 
 // ω = K / radius^1.5 (Kepler); K tuned for a calm inner ~25s/rev.
@@ -101,6 +102,33 @@ function makeSoftCircle() {
   g.addColorStop(1, "rgba(255,255,255,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, s, s);
+  return finish(c);
+}
+
+// Concentric banded texture for a Saturn ring: opacity + shade variation and a
+// couple of dark "divisions", so it reads as a real ring, not a flat disc.
+// Maps onto ringGeometry(inner = size*1.5, outer = size*2.7): the annulus samples
+// texture radius ~71..128px.
+function makeRingTexture() {
+  const s = 256;
+  const c = newCanvas(s);
+  const ctx = c.getContext("2d");
+  const cx = s / 2;
+  const rIn = 71;
+  const rOut = 128;
+  for (let rr = rIn; rr <= rOut; rr += 1) {
+    const f = (rr - rIn) / (rOut - rIn); // 0 inner → 1 outer
+    let alpha = 0.55 + 0.35 * Math.sin(f * Math.PI * 9);
+    if ((f > 0.34 && f < 0.4) || (f > 0.68 && f < 0.73)) alpha *= 0.12; // divisions
+    alpha = Math.max(0, Math.min(0.95, alpha));
+    const shade = 205 + 35 * Math.sin(f * Math.PI * 6);
+    ctx.strokeStyle = `rgba(${Math.round(shade)}, ${Math.round(shade * 0.82)}, ${Math.round(
+      shade * 0.55
+    )}, ${alpha.toFixed(3)})`;
+    ctx.beginPath();
+    ctx.arc(cx, cx, rr, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   return finish(c);
 }
 
@@ -204,24 +232,39 @@ function usePlanetMaterial(type) {
   }, [type]);
 }
 
-function Planet({ planet, index, rotRef, hovered, setHovered, reduced }) {
+function Planet({ planet, index, rotRef, hovered, setHovered, reduced, glow }) {
   const grp = useRef();
   const mesh = useRef();
+  const glowRef = useRef();
   const router = useRouter();
   const isHovered = hovered === index;
   const mat = usePlanetMaterial(planet.type);
+  const ringTex = useMemo(
+    () => (planet.type === "gas" ? makeRingTexture() : null),
+    [planet.type]
+  );
   const speed = useMemo(() => orbitalSpeed(planet.radius), [planet.radius]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
+    // orbit tilted by the planet's inclination → each planet on its own band
     const a = planet.phase + rotRef.current * speed;
     if (grp.current) {
-      grp.current.position.x = Math.cos(a) * planet.radius;
-      grp.current.position.z = Math.sin(a) * planet.radius;
+      const ex = Math.cos(a) * planet.radius;
+      const ez = Math.sin(a) * planet.radius;
+      grp.current.position.x = ex;
+      grp.current.position.y = ez * Math.sin(planet.incl);
+      grp.current.position.z = ez * Math.cos(planet.incl);
     }
     if (mesh.current) {
       if (!reduced) mesh.current.rotation.y += delta * 0.4;
       const target = isHovered ? 1.45 : 1;
       mesh.current.scale.setScalar(THREE.MathUtils.damp(mesh.current.scale.x, target, 8, delta));
+    }
+    if (glowRef.current) {
+      // faint cyan aura that gently pulses → signals "this is interactive"
+      const base = isHovered ? 0.36 : 0.15;
+      const pulse = reduced ? 0 : 0.06 * Math.sin(state.clock.elapsedTime * 1.6 + planet.phase);
+      glowRef.current.material.opacity = base + pulse;
     }
   });
 
@@ -237,6 +280,11 @@ function Planet({ planet, index, rotRef, hovered, setHovered, reduced }) {
 
   return (
     <group ref={grp}>
+      {/* faint cyan interactive aura (non-raycasting so it never blocks clicks) */}
+      <sprite ref={glowRef} scale={[planet.size * 3.6, planet.size * 3.6, 1]} raycast={() => null}>
+        <spriteMaterial map={glow} color="#21e6ff" transparent opacity={0.15} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </sprite>
+
       {/* the planet itself is the primary click target */}
       <mesh
         ref={mesh}
@@ -264,14 +312,15 @@ function Planet({ planet, index, rotRef, hovered, setHovered, reduced }) {
         />
       </mesh>
 
-      {planet.type === "gas" && (
-        <mesh rotation={[-Math.PI / 2 + 0.5, 0, 0.15]}>
-          <ringGeometry args={[planet.size * 1.4, planet.size * 2.2, 64]} />
-          <meshBasicMaterial color="#d9b47a" side={THREE.DoubleSide} transparent opacity={0.45} depthWrite={false} />
+      {/* banded, tilted Saturn ring */}
+      {planet.type === "gas" && ringTex && (
+        <mesh rotation={[-1.1, 0, 0.35]} raycast={() => null}>
+          <ringGeometry args={[planet.size * 1.5, planet.size * 2.7, 96]} />
+          <meshBasicMaterial map={ringTex} side={THREE.DoubleSide} transparent depthWrite={false} />
         </mesh>
       )}
 
-      <Html center position={[0, -(planet.size + 0.55), 0]} zIndexRange={[20, 0]}>
+      <Html center position={[0, -(planet.size + 0.6), 0]} zIndexRange={[20, 0]}>
         <Link
           href={planet.href}
           className={`${styles.chip} ${isHovered ? styles.chipActive : ""}`}
@@ -289,9 +338,9 @@ function OrbitPaths() {
   return (
     <>
       {PLANETS.map((p) => (
-        <mesh key={p.href} rotation={[-Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[p.radius - 0.014, p.radius + 0.014, 160]} />
-          <meshBasicMaterial color="#21e6ff" side={THREE.DoubleSide} transparent opacity={0.1} depthWrite={false} />
+        <mesh key={p.href} rotation={[Math.PI / 2 - p.incl, 0, 0]} raycast={() => null}>
+          <ringGeometry args={[p.radius - 0.016, p.radius + 0.016, 160]} />
+          <meshBasicMaterial color="#21e6ff" side={THREE.DoubleSide} transparent opacity={0.11} depthWrite={false} />
         </mesh>
       ))}
     </>
@@ -364,6 +413,7 @@ function Scene({ hovered, setHovered, reduced }) {
           hovered={hovered}
           setHovered={setHovered}
           reduced={reduced}
+          glow={glow}
         />
       ))}
 
@@ -395,7 +445,7 @@ export default function GalaxyNav() {
     <div className={styles.wrap}>
       <Canvas
         dpr={[1, 2]}
-        camera={{ fov: 46, position: [0, 11, 20] }}
+        camera={{ fov: 44, position: [0, 12, 23] }}
         gl={{ antialias: true, alpha: true }}
       >
         <Scene hovered={hovered} setHovered={setHovered} reduced={reduced.current} />
