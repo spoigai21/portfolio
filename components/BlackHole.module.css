@@ -1,7 +1,7 @@
 .canvas {
   position: relative;
   width: 100%;
-  height: clamp(320px, 48vh, 500px);
+  height: clamp(260px, 38vh, 420px);
   touch-action: none;
 }
 

@@ -1,5 +1,5 @@
 import Reveal from "./Reveal";
-import BasketballPlanetCanvas from "./BasketballPlanetCanvas";
+import BlackHoleCanvas from "./BlackHoleCanvas";
 import { contact } from "@/lib/content";
 import styles from "./Contact.module.css";
 
@@ -8,13 +8,13 @@ export default function Contact() {
     <section className="section" id="contact">
       <div className="container">
         <Reveal>
-          <h2 className={`section-title ${styles.title}`}>Get in touch</h2>
+          <h2 className={styles.title}>Get in touch</h2>
         </Reveal>
 
         <div className={styles.stage}>
-          <BasketballPlanetCanvas />
+          <BlackHoleCanvas />
 
-          <Reveal className={styles.channels}>
+          <div className={styles.channels}>
             {contact.map((c) => {
               const external = c.href.startsWith("http");
               return (
@@ -28,10 +28,13 @@ export default function Contact() {
                 >
                   <span className={styles.channelLabel}>{c.label}</span>
                   <span className={styles.channelValue}>{c.value}</span>
+                  <span className={styles.channelArrow} aria-hidden="true">
+                    ↗
+                  </span>
                 </a>
               );
             })}
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>
