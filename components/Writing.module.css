@@ -2,13 +2,14 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 18px;
 }
 
 .card {
   display: block;
+  height: 100%;
   border: 1px solid var(--hairline);
   border-radius: 16px;
   padding: 22px 24px;
@@ -20,34 +21,45 @@
 }
 
 .card:hover {
-  border-color: rgba(139, 92, 246, 0.5);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  border-color: rgba(33, 230, 255, 0.5);
+  box-shadow: 0 0 20px rgba(33, 230, 255, 0.22);
   transform: translateY(-3px);
 }
 
-.meta {
-  display: flex;
+/* cyan "In progress" badge with a live pulsing dot */
+.badgeNow {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-}
-
-.date {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
-}
-
-.badge {
+  gap: 7px;
   font-family: var(--font-mono), monospace;
   font-size: 0.64rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
-  border: 1px solid rgba(255, 23, 68, 0.35);
-  background: rgba(255, 23, 68, 0.06);
+  color: var(--cyan);
+  border: 1px solid rgba(33, 230, 255, 0.4);
+  background: rgba(33, 230, 255, 0.06);
   border-radius: 999px;
-  padding: 3px 9px;
+  padding: 4px 11px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
+  animation: nowPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes nowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 680px) {
+  .list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .title {

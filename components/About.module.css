@@ -107,12 +107,8 @@
 }
 
 /* ---------- compact path ---------- */
-.pathGrid {
+.eduBlock {
   margin-top: clamp(40px, 7vh, 72px);
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: clamp(28px, 5vw, 56px);
-  align-items: start;
 }
 
 .timeline {
@@ -170,9 +166,6 @@
 
 @media (max-width: 760px) {
   .pillars {
-    grid-template-columns: 1fr;
-  }
-  .pathGrid {
     grid-template-columns: 1fr;
   }
 }

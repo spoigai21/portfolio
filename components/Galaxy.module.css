@@ -12,8 +12,8 @@
     ),
     var(--void);
   overflow: hidden;
-  /* scroll-driven opacity is set from JS; this just smooths fast scrolls */
-  transition: opacity 0.18s linear;
+  /* quick fade-in on mount (opacity flipped to 1 from JS) */
+  transition: opacity 0.6s ease;
 }
 
 .wrap canvas {
