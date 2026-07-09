@@ -105,25 +105,27 @@ const nebulaFragment = /* glsl */ `
     vec2 q = vec2(fbm(p * 2.2 + vec2(0.0, t * 0.02)),
                   fbm(p * 2.2 + vec2(5.2, -t * 0.016)));
     float d = fbm(p * 3.0 + q * 1.5 + vec2(t * 0.012, -t * 0.008));
-    d = smoothstep(0.34, 1.0, d); // clip the low-density floor → wispy, not flat
+    d = smoothstep(0.22, 0.95, d); // clip the low-density floor → wispy, not flat
 
     // anchor the visual mass to the right + lower-right
-    float mx = smoothstep(0.12, 0.92, uv.x);
-    float my = smoothstep(0.98, 0.1, uv.y);          // heavier toward the bottom
-    float blob = 1.0 - smoothstep(0.0, 0.85,
-      length(vec2((uv.x - 0.82) * uAspect, uv.y - 0.26)));
-    float mask = clamp(mx * (0.5 + 0.7 * my), 0.0, 1.0);
-    mask = max(mask * 0.85, blob * 0.55);
+    float mx = smoothstep(0.1, 0.72, uv.x);
+    float my = smoothstep(1.02, 0.05, uv.y);         // heavier toward the bottom
+    float blob = 1.0 - smoothstep(0.0, 1.05,
+      length(vec2((uv.x - 0.82) * uAspect, uv.y - 0.24)));
+    float mask = clamp(mx * (0.55 + 0.65 * my), 0.0, 1.0);
+    mask = max(mask, blob * 0.85);
 
-    float density = d * mask;
+    // a soft continuous base on the right so it reads as cloud, not just wisps
+    float density = (d * 0.8 + 0.2) * mask;
 
     // deep violet base, magenta only in the densest cells, indigo in the thin
     vec3 col = mix(uIndigo, uViolet, smoothstep(0.0, 0.6, d));
-    col = mix(col, uMagenta, smoothstep(0.6, 1.0, d) * 0.5);
+    col = mix(col, uMagenta, smoothstep(0.6, 1.0, d) * 0.55);
 
-    // low-contrast guardrails: cap brightness and opacity well below the text
-    col *= 0.5;
-    float alpha = density * 0.4;
+    // low-contrast guardrails: capped so it stays well below the text, but
+    // clearly present on the right half of the viewport
+    col *= 0.82;
+    float alpha = clamp(density, 0.0, 1.0) * 0.62;
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -159,6 +161,7 @@ function Nebula({ reduced }) {
         transparent
         depthWrite={false}
         depthTest={false}
+        side={THREE.DoubleSide}
       />
     </mesh>
   );
