@@ -135,18 +135,79 @@ function makeRingTexture() {
 }
 
 /* ---------- sun ---------- */
-// Fresnel corona: brightest at the limb, giving the emissive sphere a volumetric
-// glow falloff instead of reading as a flat pasted-on disc.
-const coronaVertex = /* glsl */ `
+// Shared vertex stage for the sun shaders: hands the fragment stage the world
+// normal, the view direction (for the front→limb radial gradient), and the
+// object-space position (for sampling 3D noise that churns with the body).
+const sunVertex = /* glsl */ `
   varying vec3 vN;
   varying vec3 vView;
+  varying vec3 vPos;
   void main() {
     vec4 mv = modelViewMatrix * vec4(position, 1.0);
     vN = normalize(normalMatrix * normal);
     vView = normalize(-mv.xyz);
+    vPos = position;
     gl_Position = projectionMatrix * mv;
   }
 `;
+
+// The star body. dot(normal, view) is ~1 on the part of the sphere facing the
+// camera (the disc's centre) and ~0 at the limb, so it doubles as a radial
+// coordinate: white-hot core → gold → deep orange at the edge. Layered fbm
+// noise scrolls slowly for surface turbulence + granulation, and uPulse
+// breathes the whole thing. Self-lit (no scene lighting) — it *is* the light.
+const sunBodyFragment = /* glsl */ `
+  precision highp float;
+  uniform float uTime;
+  uniform float uPulse;
+  uniform vec3 uCore;
+  uniform vec3 uMid;
+  uniform vec3 uEdge;
+  varying vec3 vN;
+  varying vec3 vView;
+  varying vec3 vPos;
+
+  float hash(vec3 p) {
+    p = fract(p * 0.3183099 + 0.1);
+    p *= 17.0;
+    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+  }
+  float noise(vec3 x) {
+    vec3 i = floor(x);
+    vec3 f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    return mix(
+      mix(mix(hash(i + vec3(0,0,0)), hash(i + vec3(1,0,0)), f.x),
+          mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+      mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+          mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y),
+      f.z);
+  }
+  float fbm(vec3 p) {
+    float v = 0.0, a = 0.5;
+    for (int i = 0; i < 4; i++) { v += a * noise(p); p *= 2.0; a *= 0.5; }
+    return v;
+  }
+
+  void main() {
+    float facing = max(dot(vN, vView), 0.0);           // 1 centre → 0 limb
+    vec3 col = mix(uEdge, uMid, smoothstep(0.0, 0.55, facing));
+    col = mix(col, uCore, smoothstep(0.6, 1.0, facing));
+
+    // churning plasma: two octaves drifting in opposite directions
+    float n1 = fbm(vPos * 2.6 + vec3(0.0, uTime * 0.14, 0.0));
+    float n2 = fbm(vPos * 5.5 - vec3(uTime * 0.09, 0.0, 0.0));
+    float turb = 0.55 * n1 + 0.45 * n2;
+    col *= 0.78 + 0.5 * turb;                            // granulation
+    col += uCore * smoothstep(0.72, 1.0, turb) * 0.5;    // bright hot cells
+
+    col *= uPulse;                                       // slow breathing
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+// Fresnel corona: brightest at the limb, extending past the body so the
+// boundary dissolves into glow instead of a hard cut. uStrength shimmers.
 const coronaFragment = /* glsl */ `
   precision mediump float;
   uniform vec3 uColor;
@@ -154,6 +215,7 @@ const coronaFragment = /* glsl */ `
   uniform float uStrength;
   varying vec3 vN;
   varying vec3 vView;
+  varying vec3 vPos;
   void main() {
     float f = pow(1.0 - max(dot(vN, vView), 0.0), uPower);
     gl_FragColor = vec4(uColor, f * uStrength);
@@ -162,51 +224,75 @@ const coronaFragment = /* glsl */ `
 
 function Sun({ glow, reduced }) {
   const core = useRef();
-  const coronaUniforms = useMemo(
+  const bodyUniforms = useMemo(
     () => ({
-      uColor: { value: new THREE.Color("#ffb04d") },
-      uPower: { value: 2.6 },
-      uStrength: { value: 0.9 },
+      uTime: { value: 0 },
+      uPulse: { value: 1 },
+      uCore: { value: new THREE.Color("#fff6e6") }, // near-white hot core
+      uMid: { value: new THREE.Color("#ffc247") },  // gold
+      uEdge: { value: new THREE.Color("#e04f10") }, // deep orange limb
     }),
     []
   );
-  useFrame((_, delta) => {
-    if (!reduced && core.current) core.current.rotation.y += delta * 0.15;
+  const coronaUniforms = useMemo(
+    () => ({
+      uColor: { value: new THREE.Color("#ffb04d") },
+      uPower: { value: 2.4 },
+      uStrength: { value: 1.15 },
+    }),
+    []
+  );
+  useFrame((state, delta) => {
+    if (reduced) return;
+    if (core.current) core.current.rotation.y += delta * 0.05; // very slow churn
+    bodyUniforms.uTime.value += delta;
+    const t = state.clock.elapsedTime;
+    bodyUniforms.uPulse.value = 1.0 + 0.06 * Math.sin(t * 0.5);        // breathing
+    coronaUniforms.uStrength.value = 1.15 + 0.18 * Math.sin(t * 0.9);  // shimmer
   });
   return (
     <group>
-      <pointLight position={[0, 0, 0]} intensity={3} decay={0} color="#ffdca8" />
+      {/* the sun is the scene's key light — brightest source by a wide margin */}
+      <pointLight position={[0, 0, 0]} intensity={4.6} decay={0} color="#ffdca8" />
 
-      {/* hot emissive body */}
+      {/* hot emissive body — radial gradient + animated turbulence */}
       <mesh ref={core}>
-        <sphereGeometry args={[0.95, 48, 48]} />
-        <meshStandardMaterial
-          color="#ff9d3c"
-          emissive="#ffce7a"
-          emissiveIntensity={1.5}
+        <sphereGeometry args={[0.95, 64, 64]} />
+        <shaderMaterial
+          uniforms={bodyUniforms}
+          vertexShader={sunVertex}
+          fragmentShader={sunBodyFragment}
           toneMapped={false}
         />
       </mesh>
 
-      {/* fresnel corona hugging the limb */}
-      <mesh scale={1.3}>
+      {/* fresnel corona hugging the limb, pushed past the surface */}
+      <mesh scale={1.32}>
         <sphereGeometry args={[0.95, 48, 48]} />
         <shaderMaterial
           uniforms={coronaUniforms}
-          vertexShader={coronaVertex}
+          vertexShader={sunVertex}
           fragmentShader={coronaFragment}
           transparent
           depthWrite={false}
           blending={THREE.AdditiveBlending}
+          toneMapped={false}
         />
       </mesh>
 
-      {/* layered soft halos → smooth outer falloff */}
-      <sprite scale={[4.4, 4.4, 1]}>
-        <spriteMaterial map={glow} color="#ffc46a" transparent opacity={0.55} depthWrite={false} blending={THREE.AdditiveBlending} />
+      {/* layered additive halos → strong bloom that dissolves the edge and
+          extends well beyond the sphere, so it reads as a star, not a disc */}
+      <sprite scale={[3.0, 3.0, 1]}>
+        <spriteMaterial map={glow} color="#ffe6b8" transparent opacity={0.7} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </sprite>
-      <sprite scale={[9.5, 9.5, 1]}>
-        <spriteMaterial map={glow} color="#ff8a3c" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} />
+      <sprite scale={[5.6, 5.6, 1]}>
+        <spriteMaterial map={glow} color="#ffc46a" transparent opacity={0.5} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      </sprite>
+      <sprite scale={[11.0, 11.0, 1]}>
+        <spriteMaterial map={glow} color="#ff8a3c" transparent opacity={0.28} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+      </sprite>
+      <sprite scale={[18.0, 18.0, 1]}>
+        <spriteMaterial map={glow} color="#ff6a1e" transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </sprite>
     </group>
   );
