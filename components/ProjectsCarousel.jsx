@@ -1,32 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { projects } from "@/lib/content";
 import styles from "./ProjectsCarousel.module.css";
 
-function ProjectImage({ src, alt }) {
-  const [failed, setFailed] = useState(!src);
-  if (failed) {
+// Media prefers a short looping clip of real usage, falls back to the still
+// screenshot, and finally to a labelled placeholder if neither loads.
+function ProjectMedia({ video, image, alt }) {
+  const [videoFailed, setVideoFailed] = useState(!video);
+  const [imgFailed, setImgFailed] = useState(!image);
+
+  if (!videoFailed) {
     return (
-      <div className={`${styles.media} ${styles.placeholder}`} aria-hidden="true">
-        <span>{alt}</span>
+      <div className={styles.media}>
+        <video
+          src={video}
+          poster={image || undefined}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onError={() => setVideoFailed(true)}
+        />
+      </div>
+    );
+  }
+  if (!imgFailed) {
+    return (
+      <div className={styles.media}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={image} alt="" loading="lazy" onError={() => setImgFailed(true)} />
       </div>
     );
   }
   return (
-    <div className={styles.media}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} />
+    <div className={`${styles.media} ${styles.placeholder}`} aria-hidden="true">
+      <span>{alt}</span>
     </div>
   );
 }
 
-// Slideshow carousel showcasing one project at a time.
+// Carousel of project cards on a horizontal scroll-snap track. The next card
+// peeks in from the right edge so it's obvious the carousel continues.
 export default function ProjectsCarousel() {
+  const track = useRef(null);
   const [i, setI] = useState(0);
   const n = projects.length;
-  const go = (d) => setI((prev) => (prev + d + n) % n);
-  const p = projects[i];
+
+  // Distance between adjacent cards (card width + gap), measured live so it
+  // stays correct across breakpoints.
+  const step = () => {
+    const kids = track.current?.children;
+    if (!kids || kids.length === 0) return 0;
+    if (kids.length > 1) return kids[1].offsetLeft - kids[0].offsetLeft;
+    return kids[0].offsetWidth;
+  };
+
+  const go = (d) => {
+    const w = step();
+    if (w) track.current?.scrollBy({ left: d * w, behavior: "smooth" });
+  };
+  const jump = (idx) => {
+    const w = step();
+    if (w) track.current?.scrollBy({ left: (idx - i) * w, behavior: "smooth" });
+  };
+  const onScroll = () => {
+    const w = step();
+    if (w) setI(Math.round((track.current?.scrollLeft ?? 0) / w));
+  };
 
   return (
     <section className={styles.wrap} aria-label="Projects">
@@ -41,50 +82,56 @@ export default function ProjectsCarousel() {
         </div>
       </div>
 
-      <article className={styles.slide} key={p.name}>
-        <ProjectImage src={p.image} alt={p.name} />
+      <ol className={styles.track} ref={track} onScroll={onScroll}>
+        {projects.map((p) => (
+          <li className={styles.slide} key={p.name}>
+            <ProjectMedia video={p.video} image={p.image} alt={p.name} />
 
-        <div className={styles.body}>
-          <div className={styles.top}>
-            <h3 className={styles.name}>{p.name}</h3>
-            <span className={styles.period}>{p.period}</span>
-          </div>
+            <div className={styles.body}>
+              <div className={styles.top}>
+                <h3 className={styles.name}>{p.name}</h3>
+                <span className={styles.period}>{p.period}</span>
+              </div>
 
-          <ul className={styles.bullets}>
-            {p.bullets.map((b, j) => (
-              <li key={j}>{b}</li>
-            ))}
-          </ul>
+              <ul className={styles.bullets}>
+                {p.bullets.map((b, j) => (
+                  <li key={j}>{b}</li>
+                ))}
+              </ul>
 
-          <ul className={styles.tags}>
-            {p.tags.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
+              {p.note && <p className={styles.note}>{p.note}</p>}
 
-          {p.links && (
-            <div className={styles.links}>
-              {p.links.github && (
-                <a href={p.links.github} target="_blank" rel="noreferrer">
-                  GitHub ↗
-                </a>
-              )}
-              {p.links.live && (
-                <a href={p.links.live} target="_blank" rel="noreferrer">
-                  Live ↗
-                </a>
+              <ul className={styles.tags}>
+                {p.tags.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+
+              {p.links && (
+                <div className={styles.links}>
+                  {p.links.github && (
+                    <a href={p.links.github} target="_blank" rel="noreferrer">
+                      GitHub ↗
+                    </a>
+                  )}
+                  {p.links.live && (
+                    <a href={p.links.live} target="_blank" rel="noreferrer">
+                      Live ↗
+                    </a>
+                  )}
+                </div>
               )}
             </div>
-          )}
-        </div>
-      </article>
+          </li>
+        ))}
+      </ol>
 
       <div className={styles.dots}>
         {projects.map((proj, d) => (
           <button
             key={proj.name}
             className={d === i ? styles.dotActive : styles.dot}
-            onClick={() => setI(d)}
+            onClick={() => jump(d)}
             aria-label={`Go to project ${d + 1}`}
             aria-current={d === i ? "true" : undefined}
           />

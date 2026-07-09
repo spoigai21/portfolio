@@ -4,10 +4,10 @@ import styles from "./Writing.module.css";
 
 export default function Writing() {
   return (
-    <section className="section" id="writing">
+    <section className="section" id="now">
       <div className="container">
         <Reveal>
-          <h2 className="section-title">Now</h2>
+          <h2 className="section-title">What I&apos;m Working On Now</h2>
         </Reveal>
 
         <ul className={styles.list}>

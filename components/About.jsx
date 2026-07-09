@@ -6,12 +6,30 @@ export default function About() {
   return (
     <section className="section" id="about">
       <div className="container">
+        <Reveal>
+          <h1 className={styles.heading}>About Me</h1>
+        </Reveal>
+
         <Reveal className={styles.prose}>
           {about.paragraphs.map((p, i) => (
             <p key={i} className={styles.para}>
               {p}
             </p>
           ))}
+        </Reveal>
+
+        <Reveal className={styles.outsideBlock}>
+          <p className={styles.subLabel}>Hobbies</p>
+          <ul className={styles.outside}>
+            {about.hobbies.map((h) => (
+              <li key={h.label} className={styles.chip}>
+                <span className={styles.chipIcon} aria-hidden="true">
+                  {h.icon}
+                </span>
+                {h.label}
+              </li>
+            ))}
+          </ul>
         </Reveal>
 
         <Reveal className={styles.eduBlock}>

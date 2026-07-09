@@ -5,7 +5,7 @@ export const metadata = {
   description: "What Shayan Poigai is actively working on right now.",
 };
 
-export default function WritingPage() {
+export default function NowPage() {
   return (
     <main className="page">
       <Writing />

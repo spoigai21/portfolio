@@ -9,23 +9,25 @@ import * as THREE from "three";
 import HeroName from "./HeroName";
 import styles from "./GalaxyNav.module.css";
 
-// Destinations as planets. Orbits are spread wide so the sun sits clearly alone
-// at the center and the labels never crowd each other. Roughly Keplerian:
-// inner planets sweep faster than outer ones.
-// Wide, staggered orbits with distinct inclinations (each orbit tilted a
-// different way) so the planets occupy separate bands — no label touches
-// another label, a planet, or the sun.
+// Destinations as planets. Every planet shares ONE angular speed, so the whole
+// system rotates rigidly: the angle between any two planets stays fixed for all
+// time, which makes their pairwise 3D distances constant. Combined with the
+// even 72° phase spacing (2π/5) and the widening radii below, no two planets —
+// and therefore no two labels — ever collide. Distinct inclinations tilt each
+// orbit into its own band for depth without breaking that guarantee.
+const TAU = Math.PI * 2;
 const PLANETS = [
-  { label: "Contact", href: "/contact", type: "molten", size: 0.46, radius: 3.4, phase: 0.0, incl: 0.16 },
-  { label: "Now", href: "/writing", type: "rock", size: 0.54, radius: 4.9, phase: 2.5, incl: -0.24 },
-  { label: "Skills", href: "/skills", type: "ice", size: 0.5, radius: 6.3, phase: 5.0, incl: 0.28 },
-  { label: "About", href: "/about", type: "emerald", size: 0.64, radius: 7.8, phase: 1.2, incl: -0.18 },
-  { label: "Work", href: "/projects", type: "gas", size: 0.98, radius: 9.4, phase: 3.9, incl: 0.12 },
+  { label: "Contact", href: "/contact", type: "molten", size: 0.46, radius: 3.4, phase: (0 * TAU) / 5, incl: 0.16 },
+  { label: "Now", href: "/now", type: "rock", size: 0.54, radius: 4.9, phase: (1 * TAU) / 5, incl: -0.24 },
+  { label: "Skills", href: "/skills", type: "ice", size: 0.5, radius: 6.4, phase: (2 * TAU) / 5, incl: 0.28 },
+  { label: "About", href: "/about", type: "emerald", size: 0.64, radius: 7.9, phase: (3 * TAU) / 5, incl: -0.18 },
+  { label: "Work", href: "/projects", type: "gas", size: 0.98, radius: 9.4, phase: (4 * TAU) / 5, incl: 0.12 },
 ];
 
-// ω = K / radius^1.5 (Kepler); K tuned for a calm inner ~25s/rev.
-const K = 0.9;
-const orbitalSpeed = (r) => K / Math.pow(r, 1.5);
+// One constant angular velocity for every planet (rad/s) → a calm, rigid sweep
+// (~90s/revolution) with no inner planet ever lapping an outer one.
+const ANGULAR_SPEED = 0.07;
+const orbitalSpeed = () => ANGULAR_SPEED;
 
 /* ---------- procedural surface textures (canvas → THREE texture) ---------- */
 function finish(canvas) {
@@ -261,8 +263,8 @@ function Planet({ planet, index, rotRef, hovered, setHovered, reduced, glow }) {
       mesh.current.scale.setScalar(THREE.MathUtils.damp(mesh.current.scale.x, target, 8, delta));
     }
     if (glowRef.current) {
-      // faint cyan aura that gently pulses → signals "this is interactive"
-      const base = isHovered ? 0.36 : 0.15;
+      // cyan aura that gently pulses → signals "this is interactive"
+      const base = isHovered ? 0.42 : 0.25;
       const pulse = reduced ? 0 : 0.06 * Math.sin(state.clock.elapsedTime * 1.6 + planet.phase);
       glowRef.current.material.opacity = base + pulse;
     }
@@ -282,7 +284,7 @@ function Planet({ planet, index, rotRef, hovered, setHovered, reduced, glow }) {
     <group ref={grp}>
       {/* faint cyan interactive aura (non-raycasting so it never blocks clicks) */}
       <sprite ref={glowRef} scale={[planet.size * 3.6, planet.size * 3.6, 1]} raycast={() => null}>
-        <spriteMaterial map={glow} color="#21e6ff" transparent opacity={0.15} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <spriteMaterial map={glow} color="#21e6ff" transparent opacity={0.25} depthWrite={false} blending={THREE.AdditiveBlending} />
       </sprite>
 
       {/* the planet itself is the primary click target */}

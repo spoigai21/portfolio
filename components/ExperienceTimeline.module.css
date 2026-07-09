@@ -38,13 +38,16 @@
   transform: translateY(-1px);
 }
 
-/* horizontal scroll region */
+/* horizontal scroll region — the right edge fades so it's obvious the
+   timeline continues past the last fully-visible card */
 .scroller {
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x proximity;
   padding-bottom: 12px;
   -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 44px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 44px), transparent 100%);
 }
 
 .scroller::-webkit-scrollbar {
@@ -60,6 +63,7 @@
   margin: 0;
   padding: 22px 2px 0;
   display: flex;
+  align-items: flex-start;
   gap: 22px;
   position: relative;
   min-width: min-content;
@@ -99,13 +103,16 @@
 
 .card {
   margin-top: 26px;
-  height: calc(100% - 26px);
+  min-height: 172px;
   border: 1px solid var(--hairline);
   border-radius: 16px;
   padding: 18px 20px;
   background: var(--glass);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
+  /* keep long words from spilling past the card's right edge */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .period {
@@ -125,6 +132,7 @@
   font-size: 1.05rem;
   line-height: 1.25;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .company {
@@ -132,6 +140,7 @@
   font-size: 0.8rem;
   color: #b9a9ff;
   margin: 5px 0 12px;
+  overflow-wrap: break-word;
 }
 
 .bullets {
@@ -149,6 +158,7 @@
   font-size: 0.85rem;
   line-height: 1.45;
   color: var(--text-body);
+  overflow-wrap: break-word;
 }
 
 .bullets li::before {
