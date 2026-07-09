@@ -1,0 +1,30 @@
+/* Sits behind everything. Dark sky gradient — darkest at the top where the card
+   grid lives, easing to a slightly warmer indigo toward the horizon. The WebGL
+   fresnel rim supplies the actual horizon colour. */
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+      to bottom,
+      #05030f 0%,
+      #070420 46%,
+      #090626 72%,
+      #0b0930 100%
+    ),
+    var(--void);
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+}
+
+.wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* r3f sets pointer-events:auto inline on its canvas wrapper; force it off so
+   this background never intercepts clicks/hovers meant for the content. */
+.wrap * {
+  pointer-events: none !important;
+}

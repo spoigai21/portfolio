@@ -1,3 +1,13 @@
+/* monospace/cyan "last updated" line under the heading */
+.updated {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: -8px 0 clamp(28px, 5vh, 44px);
+}
+
 .list {
   list-style: none;
   margin: 0;
@@ -5,6 +15,13 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
+  /* don't stretch rows → the mini cards stay naturally short */
+  align-items: start;
+}
+
+/* an odd final technical card spans the full width so no lone gap remains */
+.wide {
+  grid-column: 1 / -1;
 }
 
 .card {
@@ -26,57 +43,45 @@
   transform: translateY(-3px);
 }
 
-/* cyan "In progress" badge with a live pulsing dot */
-.badgeNow {
-  display: inline-flex;
+/* short personal cards — smaller, description-free, for grid rhythm */
+.miniCard {
+  display: flex;
   align-items: center;
-  gap: 7px;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.64rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  gap: 10px;
+  padding: 14px 20px;
+}
+
+.miniCard::before {
+  content: "→";
   color: var(--cyan);
-  border: 1px solid rgba(33, 230, 255, 0.4);
-  background: rgba(33, 230, 255, 0.06);
-  border-radius: 999px;
-  padding: 4px 11px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.9rem;
+  opacity: 0.7;
 }
 
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
-  animation: nowPulse 2.2s ease-in-out infinite;
-}
-
-@keyframes nowPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+.miniTitle {
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--text-bright);
+  margin: 0;
 }
 
 @media (max-width: 680px) {
   .list {
     grid-template-columns: 1fr;
   }
+  .wide {
+    grid-column: auto;
+  }
 }
 
 .title {
   font-size: 1.2rem;
-  margin: 12px 0 0;
+  margin: 0;
 }
 
 .summary {
   color: var(--text-body);
   font-size: 0.95rem;
   margin: 10px 0 0;
-}
-
-.readMore {
-  display: inline-block;
-  margin-top: 16px;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  color: var(--accent);
 }
