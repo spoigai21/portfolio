@@ -1,18 +1,25 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { projects } from "@/lib/content";
 import styles from "./ProjectsCarousel.module.css";
 
 // Media prefers a short looping clip of real usage, falls back to the still
-// screenshot, and finally to a labelled placeholder if neither loads.
-function ProjectMedia({ video, image, alt }) {
+// screenshot, and finally to a labelled placeholder if neither loads. When a
+// video is present it plays muted as a preview; clicking opens the lightbox to
+// watch it full-size with sound.
+function ProjectMedia({ video, image, alt, onOpen }) {
   const [videoFailed, setVideoFailed] = useState(!video);
   const [imgFailed, setImgFailed] = useState(!image);
 
   if (!videoFailed) {
     return (
-      <div className={styles.media}>
+      <button
+        type="button"
+        className={`${styles.media} ${styles.mediaButton}`}
+        onClick={onOpen}
+        aria-label={`Play ${alt} video with sound`}
+      >
         <video
           src={video}
           poster={image || undefined}
@@ -22,7 +29,8 @@ function ProjectMedia({ video, image, alt }) {
           playsInline
           onError={() => setVideoFailed(true)}
         />
-      </div>
+        <span className={styles.playBadge} aria-hidden="true">▶</span>
+      </button>
     );
   }
   if (!imgFailed) {
@@ -45,7 +53,18 @@ function ProjectMedia({ video, image, alt }) {
 export default function ProjectsCarousel() {
   const track = useRef(null);
   const [i, setI] = useState(0);
+  const [lightbox, setLightbox] = useState(null);
   const n = projects.length;
+
+  // Close the lightbox on Escape while it's open.
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox]);
 
   // Distance between adjacent cards (card width + gap), measured live so it
   // stays correct across breakpoints.
@@ -85,7 +104,12 @@ export default function ProjectsCarousel() {
       <ol className={styles.track} ref={track} onScroll={onScroll}>
         {projects.map((p) => (
           <li className={styles.slide} key={p.name}>
-            <ProjectMedia video={p.video} image={p.image} alt={p.name} />
+            <ProjectMedia
+              video={p.video}
+              image={p.image}
+              alt={p.name}
+              onOpen={() => setLightbox({ video: p.video, name: p.name })}
+            />
 
             <div className={styles.body}>
               <div className={styles.top}>
@@ -137,6 +161,33 @@ export default function ProjectsCarousel() {
           />
         ))}
       </div>
+
+      {lightbox && (
+        <div
+          className={styles.lightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${lightbox.name} video`}
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            className={styles.lightboxClose}
+            onClick={() => setLightbox(null)}
+            aria-label="Close video"
+          >
+            ✕
+          </button>
+          <video
+            className={styles.lightboxVideo}
+            src={lightbox.video}
+            controls
+            autoPlay
+            playsInline
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </section>
   );
 }

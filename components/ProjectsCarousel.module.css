@@ -104,6 +104,93 @@
   display: block;
 }
 
+/* clickable video preview — resets default <button> styling */
+.mediaButton {
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+}
+
+.mediaButton .playBadge {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding-left: 4px;
+  font-size: 1.3rem;
+  color: #fff;
+  background: rgba(12, 6, 40, 0.55);
+  border: 1px solid rgba(33, 230, 255, 0.5);
+  box-shadow: 0 0 18px rgba(33, 230, 255, 0.4);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mediaButton:hover .playBadge,
+.mediaButton:focus-visible .playBadge {
+  transform: scale(1.1);
+  background: rgba(33, 230, 255, 0.22);
+  box-shadow: 0 0 28px rgba(33, 230, 255, 0.6);
+}
+
+/* lightbox — full-screen video with sound + native controls */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  background: rgba(4, 2, 16, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: lightboxIn 0.18s ease;
+}
+
+@keyframes lightboxIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.lightboxVideo {
+  max-width: min(1100px, 100%);
+  max-height: 85vh;
+  width: auto;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  background: #000;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: clamp(12px, 3vw, 28px);
+  right: clamp(12px, 3vw, 28px);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(33, 230, 255, 0.4);
+  background: rgba(33, 230, 255, 0.08);
+  color: var(--cyan);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.lightboxClose:hover {
+  background: rgba(33, 230, 255, 0.18);
+  box-shadow: 0 0 16px rgba(33, 230, 255, 0.35);
+  transform: scale(1.05);
+}
+
 .placeholder {
   display: flex;
   align-items: center;
