@@ -1,23 +1,26 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Billboard, Center, Html, OrbitControls, Text3D } from "@react-three/drei";
+import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { profile } from "@/lib/content";
+import HeroName from "./HeroName";
 import styles from "./GalaxyNav.module.css";
 
 // Destinations as planets. Orbits are spread wide so the sun sits clearly alone
 // at the center and the labels never crowd each other. Roughly Keplerian:
 // inner planets sweep faster than outer ones.
+// Wide, staggered orbits — big radial gaps + spread phases so the sun sits alone
+// at the center and no two planet labels crowd each other.
 const PLANETS = [
-  { label: "Contact", href: "/contact", type: "molten", size: 0.42, radius: 2.4, phase: 3.0 },
-  { label: "Writing", href: "/writing", type: "rock", size: 0.5, radius: 3.6, phase: 5.4 },
-  { label: "Skills", href: "/skills", type: "ice", size: 0.46, radius: 4.8, phase: 0.6 },
-  { label: "About", href: "/about", type: "emerald", size: 0.6, radius: 6.0, phase: 2.4 },
-  { label: "Projects", href: "/projects", type: "gas", size: 0.9, radius: 7.5, phase: 4.6 },
+  { label: "Contact", href: "/contact", type: "molten", size: 0.44, radius: 2.8, phase: 0.0 },
+  { label: "Writing", href: "/writing", type: "rock", size: 0.52, radius: 4.3, phase: 2.6 },
+  { label: "Skills", href: "/skills", type: "ice", size: 0.48, radius: 5.8, phase: 5.1 },
+  { label: "About", href: "/about", type: "emerald", size: 0.62, radius: 7.3, phase: 1.3 },
+  { label: "Projects", href: "/projects", type: "gas", size: 0.95, radius: 8.9, phase: 3.8 },
 ];
 
 // ω = K / radius^1.5 (Kepler); K tuned for a calm inner ~25s/rev.
@@ -102,64 +105,79 @@ function makeSoftCircle() {
   return finish(c);
 }
 
-/* ---------- 3D name floating above the system ---------- */
-function HeroName() {
-  return (
-    <Billboard position={[0, 6, 0]}>
-      <Suspense fallback={null}>
-        <Center>
-          <Text3D
-            font="/fonts/helvetiker_bold.typeface.json"
-            size={0.62}
-            height={0.16}
-            bevelEnabled
-            bevelSize={0.012}
-            bevelThickness={0.02}
-            bevelSegments={2}
-            curveSegments={5}
-          >
-            {profile.name}
-            <meshStandardMaterial
-              color="#0a2a30"
-              emissive="#21e6ff"
-              emissiveIntensity={0.9}
-              roughness={0.35}
-              metalness={0.4}
-            />
-          </Text3D>
-        </Center>
-      </Suspense>
-    </Billboard>
-  );
-}
-
 /* ---------- sun ---------- */
+// Fresnel corona: brightest at the limb, giving the emissive sphere a volumetric
+// glow falloff instead of reading as a flat pasted-on disc.
+const coronaVertex = /* glsl */ `
+  varying vec3 vN;
+  varying vec3 vView;
+  void main() {
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    vN = normalize(normalMatrix * normal);
+    vView = normalize(-mv.xyz);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+const coronaFragment = /* glsl */ `
+  precision mediump float;
+  uniform vec3 uColor;
+  uniform float uPower;
+  uniform float uStrength;
+  varying vec3 vN;
+  varying vec3 vView;
+  void main() {
+    float f = pow(1.0 - max(dot(vN, vView), 0.0), uPower);
+    gl_FragColor = vec4(uColor, f * uStrength);
+  }
+`;
+
 function Sun({ glow, reduced }) {
   const core = useRef();
+  const coronaUniforms = useMemo(
+    () => ({
+      uColor: { value: new THREE.Color("#ffb04d") },
+      uPower: { value: 2.6 },
+      uStrength: { value: 0.9 },
+    }),
+    []
+  );
   useFrame((_, delta) => {
     if (!reduced && core.current) core.current.rotation.y += delta * 0.15;
   });
   return (
     <group>
       <pointLight position={[0, 0, 0]} intensity={3} decay={0} color="#ffdca8" />
+
+      {/* hot emissive body */}
       <mesh ref={core}>
         <sphereGeometry args={[0.95, 48, 48]} />
         <meshStandardMaterial
           color="#ff9d3c"
-          emissive="#ffb64d"
-          emissiveIntensity={1.6}
+          emissive="#ffce7a"
+          emissiveIntensity={1.5}
           toneMapped={false}
         />
       </mesh>
-      <sprite scale={[5.2, 5.2, 1]}>
-        <spriteMaterial
-          map={glow}
-          color="#ffb64d"
+
+      {/* fresnel corona hugging the limb */}
+      <mesh scale={1.3}>
+        <sphereGeometry args={[0.95, 48, 48]} />
+        <shaderMaterial
+          uniforms={coronaUniforms}
+          vertexShader={coronaVertex}
+          fragmentShader={coronaFragment}
           transparent
-          opacity={0.5}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
         />
+      </mesh>
+
+      {/* layered soft halos → smooth outer falloff */}
+      <sprite scale={[4.4, 4.4, 1]}>
+        <spriteMaterial map={glow} color="#ffc46a" transparent opacity={0.55} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </sprite>
+      <sprite scale={[9.5, 9.5, 1]}>
+        <spriteMaterial map={glow} color="#ff8a3c" transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} />
       </sprite>
     </group>
   );
@@ -335,7 +353,6 @@ function Scene({ hovered, setHovered, reduced }) {
       <directionalLight position={[-6, 3, -4]} intensity={0.25} color="#21e6ff" />
 
       <Starfield sprite={glow} />
-      <HeroName />
       <Sun glow={glow} reduced={reduced} />
       <OrbitPaths />
 
@@ -379,13 +396,16 @@ export default function GalaxyNav() {
     <div className={styles.wrap}>
       <Canvas
         dpr={[1, 2]}
-        camera={{ fov: 46, position: [0, 9, 17] }}
+        camera={{ fov: 46, position: [0, 11, 20] }}
         gl={{ antialias: true, alpha: true }}
       >
         <Scene hovered={hovered} setHovered={setHovered} reduced={reduced.current} />
       </Canvas>
 
-      {/* short, plain, present-tense line (the only 2D copy on the hero) */}
+      {/* comet-written 3D-styled name overlay */}
+      <HeroName />
+
+      {/* short, plain, present-tense line */}
       <p className={styles.tagline}>{profile.now}</p>
 
       {/* Accessible, non-3D fallback nav (keyboard + no-WebGL). */}

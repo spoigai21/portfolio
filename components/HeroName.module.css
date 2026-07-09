@@ -1,0 +1,98 @@
+.name {
+  position: absolute;
+  top: clamp(84px, 15vh, 165px);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 4;
+
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 4.6vw, 2.6rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  /* balance the trailing letter-spacing so the block reads centered */
+  padding-left: 0.3em;
+}
+
+.space {
+  width: 0.5em;
+}
+
+.letter {
+  opacity: 0;
+  color: #fff;
+  will-change: opacity, color, text-shadow;
+}
+
+/* hot arrival — snaps in bright white with a warm glow (only opacity eases) */
+.on {
+  opacity: 1;
+  color: #ffffff;
+  text-shadow: 0 0 6px #ffffff, 0 0 16px #ffd9a0, 0 0 30px #ff9d3c,
+    0 0 46px #ff5252;
+  transition: opacity 0.12s ease-out;
+}
+
+/* cool to the final cyan holographic resting color, softly glowing + static */
+.settled {
+  color: var(--cyan);
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.9), 0 0 14px rgba(33, 230, 255, 0.5),
+    0 0 26px rgba(33, 230, 255, 0.28);
+  transition: color 0.5s ease, text-shadow 0.5s ease;
+}
+
+/* comet: white-hot head + tapering warm/red trail (matches the shooting stars) */
+.comet {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-40px, -50%);
+  z-index: 5;
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    #ffe6b0 35%,
+    rgba(255, 120, 60, 0.6) 60%,
+    rgba(255, 60, 60, 0) 75%
+  );
+  box-shadow: 0 0 12px #fff, 0 0 22px #ffb64d, 0 0 40px #ff5252;
+}
+
+.comet::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  width: 96px;
+  height: 5px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  filter: blur(0.6px);
+  background: linear-gradient(
+    to left,
+    rgba(255, 180, 90, 0.95),
+    rgba(255, 70, 70, 0.35) 45%,
+    rgba(255, 23, 68, 0) 100%
+  );
+}
+
+/* Reduced motion: no comet, name rendered in its final state immediately. */
+@media (prefers-reduced-motion: reduce) {
+  .letter {
+    opacity: 1;
+    color: var(--cyan);
+    text-shadow: 0 0 6px rgba(33, 230, 255, 0.9), 0 0 14px rgba(33, 230, 255, 0.5),
+      0 0 26px rgba(33, 230, 255, 0.28);
+  }
+  .comet {
+    display: none;
+  }
+}
