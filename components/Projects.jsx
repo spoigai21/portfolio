@@ -72,17 +72,6 @@ export default function Projects() {
                   ))}
                 </ul>
 
-                {p.links?.live && (
-                  <a
-                    href={p.links.live}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={styles.tryLive}
-                  >
-                    ▶ Try it live ↗
-                  </a>
-                )}
-
                 {p.links && (
                   <div className={styles.links}>
                     {p.links.github && (

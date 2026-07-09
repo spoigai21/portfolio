@@ -1,64 +1,178 @@
-.grid {
+/* ---------- pillars ---------- */
+.pillars {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.pillar {
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 22px 22px 24px;
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pillar:hover {
+  border-color: rgba(33, 230, 255, 0.45);
+  box-shadow: 0 0 20px rgba(33, 230, 255, 0.18);
+  transform: translateY(-3px);
+}
+
+.pillarLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 14px;
+}
+
+.pillarItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pillarItems li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--text-body);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.pillarItems li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.8);
+}
+
+/* ---------- shared sub-label ---------- */
+.subLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 16px;
+}
+
+/* ---------- outside of code ---------- */
+.outsideBlock {
+  margin-top: clamp(40px, 7vh, 72px);
+}
+
+.outside {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 9px 16px 9px 12px;
+  background: var(--glass);
+  color: var(--text-body);
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.chip:hover {
+  border-color: rgba(33, 230, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+.chipIcon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* ---------- compact path ---------- */
+.pathGrid {
+  margin-top: clamp(40px, 7vh, 72px);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
   gap: clamp(28px, 5vw, 56px);
   align-items: start;
 }
 
-.lead {
-  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
-  line-height: 1.45;
-  color: var(--text-bright);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.para {
-  color: var(--text-body);
-  font-size: 1rem;
-  margin: 18px 0 0;
-}
-
-/* facts card — mirrors the glass surface used by project/education cards */
-.facts {
-  position: relative;
-}
-
-.factList {
+.timeline {
   list-style: none;
   margin: 0;
-  padding: 22px 24px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  border: 1px solid var(--hairline);
-  border-radius: 16px;
-  background: var(--glass);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  gap: 16px;
 }
 
-.fact {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  padding-left: 16px;
+  border-left: 2px solid var(--hairline);
 }
 
-.factLabel {
+.entryPeriod {
   font-family: var(--font-mono), monospace;
   font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
 }
 
-.factValue {
-  color: var(--text-body);
-  font-size: 0.95rem;
+.entryRole {
+  color: var(--text-bright);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.entryOrg {
+  color: #b9a9ff;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+}
+
+.resume {
+  display: inline-block;
+  margin-top: 22px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  border: 1px solid rgba(255, 23, 68, 0.35);
+  border-radius: 999px;
+  padding: 8px 16px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.resume:hover {
+  background: rgba(255, 23, 68, 0.08);
+  border-color: var(--accent);
 }
 
 @media (max-width: 760px) {
-  .grid {
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+  .pathGrid {
     grid-template-columns: 1fr;
   }
 }

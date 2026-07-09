@@ -6,6 +6,11 @@ import {
   Bree_Serif,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import Galaxy from "@/components/Galaxy";
+import FloatingStars from "@/components/FloatingStars";
+import CursorGlow from "@/components/CursorGlow";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -62,7 +67,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable}`}
       >
+        {/* Shared galaxy backdrop + chrome for every page */}
+        <Galaxy />
+        <FloatingStars />
+        <CursorGlow />
+        <Nav />
         {children}
+        <Footer />
         <Analytics />
       </body>
     </html>

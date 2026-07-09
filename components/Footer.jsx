@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { profile } from "@/lib/content";
 import styles from "./Footer.module.css";
 
@@ -9,14 +10,14 @@ export default function Footer() {
           © {new Date().getFullYear()} {profile.name}
         </p>
         <nav className={styles.links}>
-          <a href={`mailto:${profile.email}`}>Email</a>
+          <Link href="/contact">Contact</Link>
+          <Link href="/inspiration">Inspiration</Link>
           <a href={profile.links.github} target="_blank" rel="noreferrer">
             GitHub
           </a>
           <a href={profile.links.linkedin} target="_blank" rel="noreferrer">
             LinkedIn
           </a>
-          <a href="#top">Back to top ↑</a>
         </nav>
       </div>
     </footer>

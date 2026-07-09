@@ -92,6 +92,14 @@ h4 {
   z-index: 1;
 }
 
+/* Inner pages: clear the fixed nav so the first section isn't tucked under it. */
+.page {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(64px, 9vh, 96px);
+  min-height: 70vh;
+}
+
 .eyebrow {
   font-family: var(--font-mono), monospace;
   font-size: 0.74rem;

@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import styles from "./Nav.module.css";
 
-const sections = [
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "work", label: "Work" },
-  { id: "skills", label: "Skills" },
-  { id: "writing", label: "Writing" },
+const pages = [
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+  { href: "/skills", label: "Skills" },
+  { href: "/writing", label: "Writing" },
 ];
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -22,12 +24,15 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => setOpen(false), [pathname]);
+
   return (
     <header className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
       <div className={`container ${styles.inner}`}>
-        <a href="/#top" className={styles.brand} onClick={() => setOpen(false)}>
+        <Link href="/" className={styles.brand}>
           SP<span className={styles.dot}>.</span>
-        </a>
+        </Link>
 
         <button
           className={styles.toggle}
@@ -40,18 +45,22 @@ export default function Nav() {
         </button>
 
         <nav className={`${styles.links} ${open ? styles.linksOpen : ""}`}>
-          {sections.map((s) => (
-            <a key={s.id} href={`/#${s.id}`} onClick={() => setOpen(false)}>
-              {s.label}
-            </a>
-          ))}
-          <a
-            href="/shayan-resume.pdf"
-            className={styles.resume}
-            onClick={() => setOpen(false)}
-          >
-            Résumé
-          </a>
+          {pages.map((p) => {
+            const active = pathname === p.href;
+            return (
+              <Link
+                key={p.href}
+                href={p.href}
+                className={active ? styles.active : undefined}
+                aria-current={active ? "page" : undefined}
+              >
+                {p.label}
+              </Link>
+            );
+          })}
+          <Link href="/contact" className={styles.contact}>
+            Contact Me
+          </Link>
         </nav>
       </div>
     </header>

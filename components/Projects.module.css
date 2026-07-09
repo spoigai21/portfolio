@@ -109,26 +109,6 @@
   line-height: 1.6;
 }
 
-/* prominent "Try it live" button for deployed projects */
-.tryLive {
-  align-self: flex-start;
-  margin-top: 20px;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--text-bright);
-  background: linear-gradient(120deg, var(--violet), var(--indigo));
-  padding: 11px 22px;
-  border-radius: 999px;
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
-}
-
-.tryLive:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 24px rgba(124, 58, 237, 0.5);
-}
-
 .tags {
   list-style: none;
   display: flex;

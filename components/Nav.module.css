@@ -52,16 +52,27 @@
   color: var(--text-bright);
 }
 
-.resume {
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  padding: 7px 16px;
-  color: var(--accent) !important;
+/* active page link — cyan holographic underglow */
+.links a.active {
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(33, 230, 255, 0.6);
 }
 
-.resume:hover {
-  border-color: var(--accent);
-  background: rgba(255, 23, 68, 0.08);
+/* prominent Contact Me CTA */
+.contact {
+  border: 1px solid rgba(33, 230, 255, 0.55);
+  border-radius: 999px;
+  padding: 7px 16px;
+  color: var(--cyan) !important;
+  box-shadow: 0 0 14px rgba(33, 230, 255, 0.25),
+    inset 0 0 10px rgba(33, 230, 255, 0.1);
+  transition: color 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
+}
+
+.contact:hover {
+  background: rgba(33, 230, 255, 0.08);
+  box-shadow: 0 0 22px rgba(33, 230, 255, 0.45),
+    inset 0 0 12px rgba(33, 230, 255, 0.18);
 }
 
 .toggle {

@@ -1,0 +1,10 @@
+.canvas {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 48vh, 500px);
+  touch-action: none;
+}
+
+.canvas canvas {
+  outline: none;
+}
