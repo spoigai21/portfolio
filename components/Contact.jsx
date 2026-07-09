@@ -1,4 +1,3 @@
-import SectionHeader from "./SectionHeader";
 import Reveal from "./Reveal";
 import BasketballPlanetCanvas from "./BasketballPlanetCanvas";
 import { contact } from "@/lib/content";
@@ -8,7 +7,9 @@ export default function Contact() {
   return (
     <section className="section" id="contact">
       <div className="container">
-        <SectionHeader eyebrow={"// contact"} title="Get in touch" />
+        <Reveal>
+          <h2 className={`section-title ${styles.title}`}>Get in touch</h2>
+        </Reveal>
 
         <div className={styles.stage}>
           <BasketballPlanetCanvas />

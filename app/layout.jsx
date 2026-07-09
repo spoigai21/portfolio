@@ -6,10 +6,9 @@ import {
   Bree_Serif,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import Galaxy from "@/components/Galaxy";
-import FloatingStars from "@/components/FloatingStars";
+import SiteBackdrop from "@/components/SiteBackdrop";
 import CursorGlow from "@/components/CursorGlow";
-import Nav from "@/components/Nav";
+import BackHome from "@/components/BackHome";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
@@ -67,11 +66,10 @@ export default function RootLayout({ children }) {
       <body
         className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable}`}
       >
-        {/* Shared galaxy backdrop + chrome for every page */}
-        <Galaxy />
-        <FloatingStars />
+        {/* Backdrop (galaxy, or the void on /contact) + chrome for every page */}
+        <SiteBackdrop />
         <CursorGlow />
-        <Nav />
+        <BackHome />
         {children}
         <Footer />
         <Analytics />

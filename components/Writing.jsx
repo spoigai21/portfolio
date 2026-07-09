@@ -1,5 +1,4 @@
 import Reveal from "./Reveal";
-import SectionHeader from "./SectionHeader";
 import { posts } from "@/lib/content";
 import styles from "./Writing.module.css";
 
@@ -7,7 +6,9 @@ export default function Writing() {
   return (
     <section className="section" id="writing">
       <div className="container">
-        <SectionHeader eyebrow={"// now"} title="What I'm working on" />
+        <Reveal>
+          <h2 className="section-title">What I&apos;m working on</h2>
+        </Reveal>
 
         <ul className={styles.list}>
           {posts.map((post, i) => (

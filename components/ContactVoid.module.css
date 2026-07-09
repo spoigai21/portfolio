@@ -1,0 +1,46 @@
+/* Sits behind the contact content; darker and deeper than the galaxy void. */
+.void {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(70% 60% at 50% 38%, #150a2b 0%, #08041a 48%, #040110 100%),
+    #030109;
+}
+
+/* slow-drifting nebula clouds */
+.void::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(30% 30% at 24% 30%, rgba(88, 28, 135, 0.38), transparent 70%),
+    radial-gradient(28% 28% at 78% 66%, rgba(30, 58, 138, 0.32), transparent 70%),
+    radial-gradient(22% 22% at 62% 22%, rgba(180, 40, 120, 0.16), transparent 70%),
+    radial-gradient(26% 26% at 40% 80%, rgba(33, 230, 255, 0.1), transparent 70%);
+  filter: blur(24px);
+  animation: voidDrift 44s ease-in-out infinite alternate;
+}
+
+/* deep vignette to sink the edges into the void */
+.void::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 100% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+@keyframes voidDrift {
+  from {
+    transform: translate(-2%, -1%) scale(1);
+  }
+  to {
+    transform: translate(2%, 2%) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .void::before {
+    animation: none;
+  }
+}

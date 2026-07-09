@@ -151,22 +151,14 @@ export default function StarField({ layer = "front" }) {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Hidden during the hero, fading in just past it — same curve as the galaxy.
+  // Fade in near-immediately on mount. (The old behavior gated opacity on
+  // scrolling past a hero that no longer exists, which left the shooting stars
+  // stuck invisible on every page.)
   useEffect(() => {
-    const onScroll = () => {
-      const scrollY = window.scrollY;
-      const start = window.innerHeight;
-      const end = window.innerHeight * 1.5;
-      const o = Math.min(1, Math.max(0, (scrollY - start) / (end - start)));
-      if (layerRef.current) layerRef.current.style.opacity = String(o);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    const id = requestAnimationFrame(() => {
+      if (layerRef.current) layerRef.current.style.opacity = "1";
+    });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   return (

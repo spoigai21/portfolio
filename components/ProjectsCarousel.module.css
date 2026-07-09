@@ -1,0 +1,228 @@
+.wrap {
+  border-top: 1px solid var(--hairline);
+  padding-top: clamp(40px, 7vh, 72px);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: -0.01em;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.counter {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  min-width: 46px;
+  text-align: center;
+}
+
+.controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(33, 230, 255, 0.4);
+  background: rgba(33, 230, 255, 0.06);
+  color: var(--cyan);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.controls button:hover {
+  background: rgba(33, 230, 255, 0.14);
+  box-shadow: 0 0 16px rgba(33, 230, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* the slide */
+.slide {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 28px;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  padding: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  animation: slideIn 0.35s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.media {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: rgba(12, 6, 40, 0.6);
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px;
+  background: radial-gradient(90% 90% at 30% 20%, rgba(33, 230, 255, 0.16), transparent 70%),
+    radial-gradient(90% 90% at 80% 90%, rgba(124, 58, 237, 0.22), transparent 70%),
+    rgba(12, 6, 40, 0.6);
+  border: 1px solid var(--hairline);
+}
+
+.placeholder span {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.name {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.period {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.bullets {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.bullets li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-body);
+}
+
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px rgba(33, 230, 255, 0.7);
+}
+
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.tags li {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.links {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.links a {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--cyan);
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--text-bright);
+}
+
+/* dots */
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.dot,
+.dotActive {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  background: rgba(139, 130, 166, 0.4);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.dotActive {
+  background: var(--cyan);
+  box-shadow: 0 0 10px rgba(33, 230, 255, 0.8);
+  transform: scale(1.2);
+}
+
+@media (max-width: 680px) {
+  .slide {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}

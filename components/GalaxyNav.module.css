@@ -10,25 +10,22 @@
   outline: none;
 }
 
-.overlay {
+/* short present-tense line, pinned near the bottom of the hero */
+.tagline {
   position: absolute;
-  top: clamp(84px, 14vh, 140px);
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.wordmark {
+  left: 50%;
+  bottom: clamp(60px, 12vh, 120px);
+  transform: translateX(-50%);
+  width: min(90vw, 46ch);
   margin: 0;
-  font-family: var(--font-syne), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-bright);
-  text-shadow: 0 0 18px rgba(124, 58, 237, 0.5);
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(0.78rem, 1.6vw, 0.95rem);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--text-body);
+  text-shadow: 0 0 16px rgba(12, 6, 40, 0.9);
 }
 
 /* cyan holographic label chip — same language as the Skills tooltip */

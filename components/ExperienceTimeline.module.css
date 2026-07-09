@@ -1,0 +1,164 @@
+.wrap {
+  margin-bottom: clamp(48px, 9vh, 96px);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: -0.01em;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(33, 230, 255, 0.4);
+  background: rgba(33, 230, 255, 0.06);
+  color: var(--cyan);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.controls button:hover {
+  background: rgba(33, 230, 255, 0.14);
+  box-shadow: 0 0 16px rgba(33, 230, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* horizontal scroll region */
+.scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroller::-webkit-scrollbar {
+  height: 6px;
+}
+.scroller::-webkit-scrollbar-thumb {
+  background: rgba(33, 230, 255, 0.35);
+  border-radius: 999px;
+}
+
+.track {
+  list-style: none;
+  margin: 0;
+  padding: 22px 2px 0;
+  display: flex;
+  gap: 22px;
+  position: relative;
+  min-width: min-content;
+}
+
+/* the timeline spine running along the top of the row */
+.track::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), rgba(124, 58, 237, 0.5), rgba(124, 58, 237, 0));
+  box-shadow: 0 0 12px rgba(33, 230, 255, 0.4);
+}
+
+.item {
+  position: relative;
+  flex: 0 0 320px;
+  max-width: 320px;
+  scroll-snap-align: start;
+}
+
+.node {
+  position: absolute;
+  top: -1px;
+  left: 22px;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--void);
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 0 4px rgba(33, 230, 255, 0.12), 0 0 14px rgba(33, 230, 255, 0.7);
+}
+
+.card {
+  margin-top: 26px;
+  height: calc(100% - 26px);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 18px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.period {
+  display: inline-block;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  border: 1px solid rgba(33, 230, 255, 0.35);
+  border-radius: 999px;
+  padding: 3px 10px;
+  margin-bottom: 12px;
+}
+
+.role {
+  font-size: 1.05rem;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.company {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: #b9a9ff;
+  margin: 5px 0 12px;
+}
+
+.bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bullets li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 6px rgba(33, 230, 255, 0.7);
+}

@@ -1,14 +1,20 @@
-import Projects from "@/components/Projects";
+import ExperienceTimeline from "@/components/ExperienceTimeline";
+import ProjectsCarousel from "@/components/ProjectsCarousel";
 
 export const metadata = {
-  title: "Projects — Shayan Poigai",
-  description: "Things Shayan Poigai has built.",
+  title: "Projects & Experience — Shayan Poigai",
+  description: "Projects and work experience by Shayan Poigai.",
 };
 
 export default function ProjectsPage() {
   return (
     <main className="page">
-      <Projects />
+      <section className="section">
+        <div className="container">
+          <ExperienceTimeline />
+          <ProjectsCarousel />
+        </div>
+      </section>
     </main>
   );
 }
