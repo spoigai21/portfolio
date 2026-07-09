@@ -5,7 +5,7 @@ import { profile } from "@/lib/content";
 import styles from "./HeroName.module.css";
 
 const CHARS = profile.name.toUpperCase().split("");
-const COMET_MS = 1000; // time for the comet to cross the frame
+const COMET_MS = 2400; // time for the comet to cross the frame (slow, graceful)
 const COOL_MS = 500; // hot -> cyan cooldown per letter
 
 // A comet streaks across the hero and the letters of the name materialize in its

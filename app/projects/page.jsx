@@ -2,7 +2,7 @@ import ExperienceTimeline from "@/components/ExperienceTimeline";
 import ProjectsCarousel from "@/components/ProjectsCarousel";
 
 export const metadata = {
-  title: "Projects & Experience — Shayan Poigai",
+  title: "Projects/Experience — Shayan Poigai",
   description: "Projects and work experience by Shayan Poigai.",
 };
 

@@ -7,7 +7,7 @@ export default function Writing() {
     <section className="section" id="writing">
       <div className="container">
         <Reveal>
-          <h2 className="section-title">What I&apos;m working on</h2>
+          <h2 className="section-title">Current work</h2>
         </Reveal>
 
         <ul className={styles.list}>

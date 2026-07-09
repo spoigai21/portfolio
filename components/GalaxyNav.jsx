@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { profile } from "@/lib/content";
 import HeroName from "./HeroName";
 import styles from "./GalaxyNav.module.css";
 
@@ -17,10 +16,10 @@ import styles from "./GalaxyNav.module.css";
 // at the center and no two planet labels crowd each other.
 const PLANETS = [
   { label: "Contact", href: "/contact", type: "molten", size: 0.44, radius: 2.8, phase: 0.0 },
-  { label: "Writing", href: "/writing", type: "rock", size: 0.52, radius: 4.3, phase: 2.6 },
+  { label: "Current work", href: "/writing", type: "rock", size: 0.52, radius: 4.3, phase: 2.6 },
   { label: "Skills", href: "/skills", type: "ice", size: 0.48, radius: 5.8, phase: 5.1 },
   { label: "About", href: "/about", type: "emerald", size: 0.62, radius: 7.3, phase: 1.3 },
-  { label: "Projects", href: "/projects", type: "gas", size: 0.95, radius: 8.9, phase: 3.8 },
+  { label: "Projects/Experience", href: "/projects", type: "gas", size: 0.95, radius: 8.9, phase: 3.8 },
 ];
 
 // ω = K / radius^1.5 (Kepler); K tuned for a calm inner ~25s/rev.
@@ -404,9 +403,6 @@ export default function GalaxyNav() {
 
       {/* comet-written 3D-styled name overlay */}
       <HeroName />
-
-      {/* short, plain, present-tense line */}
-      <p className={styles.tagline}>{profile.now}</p>
 
       {/* Accessible, non-3D fallback nav (keyboard + no-WebGL). */}
       <nav className={styles.srNav}>
