@@ -1,0 +1,41 @@
+/* Sits behind everything; deep indigo void shows through the transparent canvas.
+   Base gradient is anchored right-of-centre to seat the nebula's mass. */
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      120% 100% at 78% 32%,
+      #180a3c 0%,
+      #0c0628 55%,
+      #07041a 100%
+    ),
+    var(--void);
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+}
+
+.wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* r3f sets pointer-events:auto inline on its canvas wrapper; force it off so
+   this background never intercepts clicks/hovers meant for the content. */
+.wrap * {
+  pointer-events: none !important;
+}
+
+/* Legibility insurance: darken the left reading column over the nebula. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to right,
+    var(--void) 0%,
+    rgba(12, 6, 40, 0.82) 24%,
+    rgba(12, 6, 40, 0) 60%
+  );
+}

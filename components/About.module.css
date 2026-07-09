@@ -1,8 +1,28 @@
 /* ---------- heading ---------- */
+/* Holographic monospace/cyan language, matching the hero name, the [ BRACKET ]
+   nav labels, and the section sub-labels — not the old rounded sans. */
 .heading {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  letter-spacing: -0.02em;
+  font-family: var(--font-mono), monospace;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.6vw, 2.4rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.9), 0 0 14px rgba(33, 230, 255, 0.5),
+    0 0 26px rgba(33, 230, 255, 0.28);
   margin: 0 0 clamp(20px, 3.5vh, 34px);
+}
+
+.heading::before {
+  content: "[";
+  color: rgba(33, 230, 255, 0.55);
+  margin-right: 0.45em;
+}
+
+.heading::after {
+  content: "]";
+  color: rgba(33, 230, 255, 0.55);
+  margin-left: 0.45em;
 }
 
 /* ---------- prose ---------- */
