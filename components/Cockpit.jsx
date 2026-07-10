@@ -44,6 +44,32 @@ export default function Cockpit() {
 
   return (
     <div className={styles.hud} aria-hidden="true">
+      {/* --- cockpit interior: you're sitting in a dark cabin looking out --- */}
+      {/* heavy hull vignette so the view reads as a bright window in a dark ship */}
+      <div className={styles.hull} />
+      {/* faint diagonal reflection across the canopy glass */}
+      <div className={styles.glare} />
+      {/* dark chamfered canopy frame masses in each corner */}
+      <div className={`${styles.plate} ${styles.pTL}`} />
+      <div className={`${styles.plate} ${styles.pTR}`} />
+      <div className={`${styles.plate} ${styles.pBL}`} />
+      <div className={`${styles.plate} ${styles.pBR}`} />
+      {/* canopy coaming top + instrument console bottom */}
+      <div className={styles.coamingTop} />
+      <div className={styles.dash}>
+        <div className={styles.dashGlow} />
+        <div className={styles.dashLights}>
+          <span className={`${styles.led} ${styles.ledOn}`} />
+          <span className={styles.led} />
+          <span className={`${styles.led} ${styles.ledOn}`} />
+          <span className={`${styles.led} ${styles.ledRed}`} />
+          <span className={`${styles.led} ${styles.ledOn}`} />
+          <span className={styles.led} />
+          <span className={`${styles.led} ${styles.ledOn}`} />
+        </div>
+        <div className={styles.dashLabel}>NAV · HELM · LIFE SUPPORT</div>
+      </div>
+
       {/* inset viewport frame + brighter corner brackets */}
       <div className={styles.frame} />
       <span className={`${styles.corner} ${styles.tl}`} />
