@@ -1,0 +1,204 @@
+/* Full-viewport HUD chrome. Above the orbs (they're in the section at z 1) but
+   below the nav / back-home control (z 50). Never captures pointer events, and
+   every element lives in the margins — the center is left clear for the orbs. */
+.hud {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  font-family: var(--font-mono), monospace;
+  color: var(--cyan);
+}
+
+.hud * {
+  pointer-events: none;
+}
+
+/* ---------- viewport frame ---------- */
+.frame {
+  position: absolute;
+  inset: clamp(12px, 2.4vw, 30px);
+  border: 1px solid rgba(33, 230, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: inset 0 0 60px rgba(33, 230, 255, 0.04);
+}
+
+/* L-shaped brackets sitting on the frame corners */
+.corner {
+  position: absolute;
+  width: clamp(24px, 4vw, 46px);
+  height: clamp(24px, 4vw, 46px);
+  border: 0 solid rgba(33, 230, 255, 0.7);
+  filter: drop-shadow(0 0 4px rgba(33, 230, 255, 0.5));
+}
+.tl {
+  top: clamp(12px, 2.4vw, 30px);
+  left: clamp(12px, 2.4vw, 30px);
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-left-radius: 10px;
+}
+.tr {
+  top: clamp(12px, 2.4vw, 30px);
+  right: clamp(12px, 2.4vw, 30px);
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-top-right-radius: 10px;
+}
+.bl {
+  bottom: clamp(12px, 2.4vw, 30px);
+  left: clamp(12px, 2.4vw, 30px);
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-bottom-left-radius: 10px;
+}
+.br {
+  bottom: clamp(12px, 2.4vw, 30px);
+  right: clamp(12px, 2.4vw, 30px);
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-right-radius: 10px;
+}
+
+/* ---------- header ---------- */
+.header {
+  position: absolute;
+  top: clamp(22px, 4.5vh, 44px);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.title {
+  font-size: clamp(1.15rem, 3.2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  /* the em-based letter-spacing adds trailing space; nudge back to visual center */
+  text-indent: 0.42em;
+  color: #e6feff;
+  text-shadow: 0 0 8px rgba(33, 230, 255, 0.85),
+    0 0 22px rgba(33, 230, 255, 0.45);
+}
+
+.bracket {
+  color: rgba(33, 230, 255, 0.72);
+  font-weight: 400;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: rgba(33, 230, 255, 0.55);
+  animation: hudFlicker 4.2s ease-in-out infinite;
+}
+
+/* ---------- readouts ---------- */
+.readout {
+  position: absolute;
+  font-size: clamp(0.58rem, 1.4vw, 0.7rem);
+  letter-spacing: 0.16em;
+  color: rgba(33, 230, 255, 0.62);
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topRight {
+  top: clamp(24px, 4.6vw, 46px);
+  right: clamp(28px, 5vw, 58px);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+.coords {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.vel {
+  color: rgba(33, 230, 255, 0.42);
+  letter-spacing: 0.24em;
+}
+
+.bottomLeft {
+  bottom: clamp(24px, 4.6vw, 46px);
+  left: clamp(28px, 5vw, 58px);
+}
+.bottomRight {
+  bottom: clamp(24px, 4.6vw, 46px);
+  right: clamp(28px, 5vw, 58px);
+}
+.bars {
+  letter-spacing: 0.05em;
+  color: rgba(33, 230, 255, 0.75);
+}
+
+/* blinking scanner indicator */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
+  animation: hudBlink 1.6s steps(1, end) infinite;
+}
+
+/* vertical scanner tag riding the left edge */
+.scannerLabel {
+  position: absolute;
+  left: clamp(16px, 2.6vw, 34px);
+  top: 50%;
+  transform: rotate(180deg) translateX(50%);
+  transform-origin: center;
+  writing-mode: vertical-rl;
+  font-size: clamp(0.52rem, 1.2vw, 0.62rem);
+  letter-spacing: 0.42em;
+  color: rgba(33, 230, 255, 0.3);
+}
+
+@keyframes hudBlink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes hudFlicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  48%,
+  52% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* On short/narrow screens, drop the side tag and thin the framing so nothing
+   crowds the orbs. */
+@media (max-width: 640px) {
+  .scannerLabel {
+    display: none;
+  }
+  .vel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .subtitle {
+    animation: none;
+  }
+}

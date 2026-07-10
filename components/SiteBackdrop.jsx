@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Galaxy from "./Galaxy";
 import Nebula from "./Nebula";
 import PlanetSurface from "./PlanetSurface";
+import ShipWindow from "./ShipWindow";
 import FloatingStars from "./FloatingStars";
 import ContactVoid from "./ContactVoid";
 
@@ -20,6 +21,9 @@ function Backdrop({ pathname }) {
 export default function SiteBackdrop() {
   const pathname = usePathname();
   if (pathname === "/contact") return <ContactVoid />;
+  // /skills gets the cockpit-window starfield on its own — no red shooting stars,
+  // so nothing bright ever streaks across the skill orbs in the center.
+  if (pathname === "/skills") return <ShipWindow />;
   return (
     <>
       <Backdrop pathname={pathname} />
