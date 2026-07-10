@@ -201,7 +201,7 @@ function Starfield() {
     () => ({
       uTime: { value: 0 },
       uReduced: { value: reduced ? 1 : 0 },
-      uSpeed: { value: 46 }, // world units/sec — moderate cruise (~0.4c feel)
+      uSpeed: { value: 28 }, // world units/sec — gentle cruise
       uSize: { value: 24 },
     }),
     [reduced]
@@ -210,7 +210,7 @@ function Starfield() {
     () => ({
       uTime: { value: 0 },
       uReduced: { value: reduced ? 1 : 0 },
-      uSpeed: { value: 46 },
+      uSpeed: { value: 28 },
       // static field still shows a few short streaks; motion field streaks long
       uNearTrail: { value: reduced ? 2.5 : 9.0 },
       uFarTrail: { value: reduced ? 0.6 : 1.2 },
