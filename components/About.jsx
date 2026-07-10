@@ -44,7 +44,7 @@ export default function About() {
               </li>
             ))}
           </ul>
-          <a href="/shayan-resume.pdf" className={styles.resume} download>
+          <a href="/docs/ShayanResume.pdf" className={styles.resume} download>
             Résumé ↓
           </a>
         </Reveal>
