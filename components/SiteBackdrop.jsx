@@ -5,7 +5,7 @@ import Galaxy from "./Galaxy";
 import Nebula from "./Nebula";
 import PlanetSurface from "./PlanetSurface";
 import ShipWindow from "./ShipWindow";
-import CaptainsLog from "./CaptainsLog";
+import ShipCabin from "./ShipCabin";
 import FloatingStars from "./FloatingStars";
 import ContactVoid from "./ContactVoid";
 
@@ -16,9 +16,6 @@ import ContactVoid from "./ContactVoid";
 function Backdrop({ pathname }) {
   if (pathname === "/about") return <Nebula />;
   if (pathname === "/now") return <PlanetSurface />;
-  // Work page reads like a ship's log/archive rather than open galaxy — this
-  // also replaces the bright galaxy streak that used to cross behind the cards.
-  if (pathname === "/projects") return <CaptainsLog />;
   return <Galaxy />;
 }
 
@@ -28,6 +25,9 @@ export default function SiteBackdrop() {
   // /skills gets the cockpit-window starfield on its own — no red shooting stars,
   // so nothing bright ever streaks across the skill orbs in the center.
   if (pathname === "/skills") return <ShipWindow />;
+  // Work page is the interior of a ship — enclosed cabin with a porthole. No
+  // full-screen starfield or shooting stars; space shows only through the window.
+  if (pathname === "/projects") return <ShipCabin />;
   return (
     <>
       <Backdrop pathname={pathname} />

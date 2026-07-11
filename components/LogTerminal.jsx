@@ -43,15 +43,15 @@ const scrollerFor = (section) => {
 // ship's-log terminal: a bordered document with a live header + ambient log that
 // track whichever card the reader is on. Content is passed through untouched.
 export default function LogTerminal({ children }) {
-  const rootRef = useRef(null);
+  const scrollRef = useRef(null);
   const [activeSection, setActiveSection] = useState("experience");
   const [indices, setIndices] = useState({ experience: 0, projects: 0 });
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const expSec = root.querySelector('[aria-label="Experience"]');
-    const projSec = root.querySelector('[aria-label="Projects"]');
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    const expSec = scroller.querySelector('[aria-label="Experience"]');
+    const projSec = scroller.querySelector('[aria-label="Projects"]');
     let raf = 0;
 
     const recompute = () => {
@@ -60,8 +60,9 @@ export default function LogTerminal({ children }) {
         experience: centeredIndex(expSec),
         projects: centeredIndex(projSec),
       });
-      // active section = the one whose vertical center is nearest the viewport's
-      const vmid = window.innerHeight / 2;
+      // active section = the one nearest the journal's own vertical center
+      const box = scroller.getBoundingClientRect();
+      const vmid = box.top + box.height / 2;
       const dist = (el) => {
         if (!el) return Infinity;
         const r = el.getBoundingClientRect();
@@ -73,21 +74,21 @@ export default function LogTerminal({ children }) {
       if (!raf) raf = requestAnimationFrame(recompute);
     };
 
-    const scrollers = [scrollerFor(expSec), scrollerFor(projSec)].filter(Boolean);
-    scrollers.forEach((el) =>
+    // the journal's own vertical scroll + each section's horizontal scroll
+    const hScrollers = [scrollerFor(expSec), scrollerFor(projSec)].filter(Boolean);
+    hScrollers.forEach((el) =>
       el.addEventListener("scroll", schedule, { passive: true })
     );
-    window.addEventListener("scroll", schedule, { passive: true });
+    scroller.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     schedule();
-    // one more pass after layout/media settles
     const t = setTimeout(schedule, 300);
 
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(t);
-      scrollers.forEach((el) => el.removeEventListener("scroll", schedule));
-      window.removeEventListener("scroll", schedule);
+      hScrollers.forEach((el) => el.removeEventListener("scroll", schedule));
+      scroller.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
   }, []);
@@ -96,31 +97,32 @@ export default function LogTerminal({ children }) {
   const activeIdx = Math.min(indices[activeSection] ?? 0, active.entries.length - 1);
   const activeEntry = active.entries[activeIdx] || active.entries[0];
 
+  // A fixed, bounded "journal" sitting on the desk. The window and desk stay
+  // pinned; only this journal's inner content scrolls, so reading feels like
+  // paging through the log while seated at a stationary station.
   return (
-    <section className="section" ref={rootRef}>
-      <div className="container">
-        <div className={styles.frame}>
-          <span className={`${styles.bracket} ${styles.bTL}`} aria-hidden="true" />
-          <span className={`${styles.bracket} ${styles.bTR}`} aria-hidden="true" />
-          <span className={`${styles.bracket} ${styles.bBL}`} aria-hidden="true" />
-          <span className={`${styles.bracket} ${styles.bBR}`} aria-hidden="true" />
+    <div className={styles.journal}>
+      <span className={`${styles.bracket} ${styles.bTL}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bTR}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bBL}`} aria-hidden="true" />
+      <span className={`${styles.bracket} ${styles.bBR}`} aria-hidden="true" />
 
-          <header className={styles.logHead}>
-            <div className={styles.logTitle}>
-              <span className={styles.brk}>[</span> {"CAPTAIN'S LOG"}{" "}
-              <span className={styles.brk}>]</span>
-            </div>
-            <div className={styles.logMeta}>
-              <span className={styles.metaStardate}>
-                STARDATE {activeEntry.stardate}
-              </span>
-              <span className={styles.cursor} />
-            </div>
-          </header>
-
-          <div className={styles.body}>{children}</div>
+      <header className={styles.logHead}>
+        <div className={styles.logTitle}>
+          <span className={styles.brk}>[</span> {"CAPTAIN'S LOG"}{" "}
+          <span className={styles.brk}>]</span>
         </div>
+        <div className={styles.logMeta}>
+          <span className={styles.metaStardate}>
+            STARDATE {activeEntry.stardate}
+          </span>
+          <span className={styles.cursor} />
+        </div>
+      </header>
+
+      <div className={styles.scroll} ref={scrollRef}>
+        {children}
       </div>
-    </section>
+    </div>
   );
 }

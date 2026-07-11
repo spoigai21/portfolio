@@ -1,0 +1,608 @@
+/* ============================================================
+   "At my desk" ship scene for the Work page. Two fixed layers:
+   .back  (z 0)  — dark cabin interior + the large forward window
+   .frame (z 40) — the desk/console surface in the foreground
+   Both pointer-transparent, fade in on mount.
+   ============================================================ */
+
+.back,
+.frame {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.shown {
+  opacity: 1;
+}
+
+/* ---------- dark cabin interior (behind content) ---------- */
+.back {
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 0%, rgba(33, 230, 255, 0.06), transparent 60%),
+    radial-gradient(55% 45% at 0% 100%, rgba(124, 58, 237, 0.045), transparent 60%),
+    linear-gradient(180deg, #0b0d16 0%, #08090f 58%, #050609 100%);
+  box-shadow: inset 0 0 240px 70px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- the large forward window (upper area) ---------- */
+.window {
+  position: absolute;
+  top: clamp(16px, 3vh, 44px);
+  left: 50%;
+  transform: translateX(-50%);
+  /* smaller footprint so the console can dominate below it */
+  width: min(1120px, 90vw);
+  height: clamp(150px, 25vh, 320px);
+}
+
+.windowGlass {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: radial-gradient(120% 100% at 50% 25%, #0a1626 0%, #04060d 78%);
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.6);
+}
+.windowGlass canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* dark window-frame material + cyan lit inner edge + outer glow */
+.windowFrame {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  border: 2px solid rgba(33, 230, 255, 0.34);
+  box-shadow: 0 0 34px rgba(33, 230, 255, 0.12),
+    inset 0 0 0 7px rgba(6, 11, 20, 0.92),
+    inset 0 0 26px rgba(0, 0, 0, 0.6);
+}
+
+/* window panes: a subtle cross mullion */
+.mullionH,
+.mullionV {
+  position: absolute;
+  background: linear-gradient(rgba(6, 11, 20, 0.9), rgba(6, 11, 20, 0.9));
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.14);
+}
+.mullionH {
+  left: 7px;
+  right: 7px;
+  top: 50%;
+  height: 4px;
+  transform: translateY(-50%);
+}
+.mullionV {
+  top: 7px;
+  bottom: 7px;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+}
+
+/* corner brackets on the window frame */
+.wBracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 0 solid rgba(33, 230, 255, 0.7);
+  filter: drop-shadow(0 0 4px rgba(33, 230, 255, 0.45));
+}
+.wTL {
+  top: 8px;
+  left: 8px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  border-top-left-radius: 14px;
+}
+.wTR {
+  top: 8px;
+  right: 8px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-top-right-radius: 14px;
+}
+.wBL {
+  bottom: 8px;
+  left: 8px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-bottom-left-radius: 14px;
+}
+.wBR {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-bottom-right-radius: 14px;
+}
+
+.windowLabel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: rgba(33, 230, 255, 0.4);
+}
+
+/* ---------- foreground desk / console ---------- */
+.frame {
+  z-index: 40;
+}
+
+.ambientGlow {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(40px, 9vh, 120px);
+  transform: translateX(-50%);
+  width: clamp(320px, 46vw, 720px);
+  height: clamp(160px, 22vh, 320px);
+  background: radial-gradient(circle, rgba(33, 230, 255, 0.07), transparent 68%);
+  animation: cabinPulse 6.5s ease-in-out infinite;
+}
+@keyframes cabinPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ---- a literal desk: a receding metal tabletop + a solid front edge ---- */
+
+/* the tabletop: a real horizontal surface laid down in perspective, receding
+   away toward the viewport. Panel-seam grid + light fall-off give it material;
+   the far edge fades so the log console emerges from it. */
+/* The DESK SURFACE the journal sits on. Lives in the .back layer (behind the
+   journal) so it shows to the journal's left/right and in front, reading as a
+   real tabletop. Solid brushed metal (no grid), receding to a lit back edge
+   where it meets the wall below the window. */
+.deskSurface {
+  position: absolute;
+  left: 50%;
+  transform-origin: 50% 100%;
+  /* SAME plane as the journal: identical perspective + rotateX (matched in
+     LogTerminal.module.css). */
+  transform: translateX(-50%) perspective(2200px) rotateX(14deg);
+  /* a thin frame AROUND the large console: back edge meets the (smaller) window
+     base, near edge sits on the front lip; wider than the console so it shows as
+     a border on all sides. */
+  top: calc(clamp(16px, 3vh, 44px) + clamp(150px, 25vh, 320px) - 8px);
+  bottom: clamp(30px, 4.2vh, 52px);
+  width: min(1400px, 98vw);
+  border-radius: 10px 10px 0 0;
+  background:
+    /* overhead light pool on the desktop, near the front */
+    radial-gradient(48% 40% at 50% 100%, rgba(33, 230, 255, 0.09), transparent 60%),
+    /* solid brushed metal: lit near the front, darker toward the back edge */
+    linear-gradient(0deg, #2c3f53 0%, #1d2e40 30%, #152232 66%, #111e2c 100%);
+  /* lit back edge where the desk meets the wall/window */
+  box-shadow: inset 0 3px 0 rgba(170, 220, 250, 0.22);
+}
+
+/* the near front edge of the desk — a visible vertical face with thickness,
+   its top lip catching a bright highlight. This says "I'm seated at this." */
+.deskFront {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1400px, 98vw);
+  bottom: 0;
+  height: clamp(30px, 4.2vh, 52px);
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(150, 205, 240, 0.55) 0%,
+    rgba(72, 104, 140, 0.8) 12%,
+    rgba(28, 41, 58, 0.98) 46%,
+    #0a1018 100%
+  );
+  border-top: 2px solid rgba(190, 246, 255, 0.75);
+  box-shadow: 0 -4px 28px rgba(33, 230, 255, 0.22);
+}
+/* bevel seams on the front face */
+.deskFront::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(190, 225, 255, 0.08) 0,
+    rgba(190, 225, 255, 0.08) 1px,
+    transparent 1px,
+    transparent 150px
+  );
+}
+
+/* Props sit within the desk surface (its % coords) so they lie on the same
+   tilted plane, clustered in the exposed side margins that flank the large
+   console — left and right. Hidden on narrow screens where the margins close. */
+
+/* ---- LEFT margin: mug, pen cup, stylus ---- */
+.propMug {
+  position: absolute;
+  left: 1.6%;
+  bottom: 44%;
+  width: 28px;
+  height: 24px;
+  border-radius: 3px 3px 7px 7px;
+  background: linear-gradient(180deg, #33455a, #17232f);
+  box-shadow: inset 0 2px 0 rgba(180, 220, 250, 0.28),
+    0 12px 13px -7px rgba(0, 0, 0, 0.6);
+}
+.propMug::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 5px;
+  width: 8px;
+  height: 12px;
+  border: 2px solid #33455a;
+  border-left: none;
+  border-radius: 0 7px 7px 0;
+}
+
+/* a pen/stylus holder with a couple of pens sticking out */
+.propPen {
+  position: absolute;
+  left: 1.8%;
+  bottom: 25%;
+  width: 16px;
+  height: 20px;
+  border-radius: 2px 2px 5px 5px;
+  background: linear-gradient(180deg, #2a3b4d, #141f2b);
+  box-shadow: 0 10px 12px -7px rgba(0, 0, 0, 0.6);
+}
+.propPen::before,
+.propPen::after {
+  content: "";
+  position: absolute;
+  bottom: 11px;
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+}
+.propPen::before {
+  left: 3px;
+  transform: rotate(-13deg);
+  background: #cfeeff;
+}
+.propPen::after {
+  right: 3px;
+  transform: rotate(11deg);
+  background: #86bcdb;
+}
+
+/* a stylus lying flat on the desk */
+.propStylus {
+  position: absolute;
+  left: 2.4%;
+  bottom: 11%;
+  width: 46px;
+  height: 4px;
+  border-radius: 3px;
+  transform: rotate(-19deg);
+  background: linear-gradient(90deg, #3a4c60, #86bcdb 70%, #cfeeff);
+  box-shadow: 0 7px 9px -6px rgba(0, 0, 0, 0.55);
+}
+
+/* ---- RIGHT margin: readout, hologram projector, indicator lights ---- */
+.deskObject {
+  position: absolute;
+  right: 1.6%;
+  bottom: 43%;
+  width: 22px;
+  height: 30px;
+  border-radius: 5px 5px 3px 3px;
+  background: linear-gradient(180deg, rgba(33, 230, 255, 0.45), rgba(8, 20, 30, 0.92));
+  box-shadow: 0 0 16px rgba(33, 230, 255, 0.45),
+    inset 0 2px 4px rgba(180, 245, 255, 0.45),
+    0 12px 14px -7px rgba(0, 0, 0, 0.6);
+}
+
+/* a small hologram projector: a base with a glowing panel floating above it */
+.propHolo {
+  position: absolute;
+  right: 1.8%;
+  bottom: 25%;
+  width: 24px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #33475c, #16232f);
+  box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+}
+.propHolo::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  bottom: 6px;
+  width: 18px;
+  height: 22px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(33, 230, 255, 0.4),
+    rgba(33, 230, 255, 0.04)
+  );
+  box-shadow: 0 0 12px rgba(33, 230, 255, 0.5);
+}
+
+.deckLights {
+  position: absolute;
+  right: 3%;
+  bottom: 11%;
+  display: flex;
+  gap: 12px;
+}
+
+/* ---- more LEFT-margin props (all dim, supporting detail only) ---- */
+/* a small stack of data-slates */
+.propSlates {
+  position: absolute;
+  left: 2.8%;
+  bottom: 57%;
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background: #26333f;
+  box-shadow: 0 -3px 0 -0.5px #212d38, 0 -6px 0 -1px #1c2731,
+    0 9px 10px -6px rgba(0, 0, 0, 0.55);
+}
+/* a holographic readout puck projecting a faint line of "text" */
+.propPuck {
+  position: absolute;
+  left: 2%;
+  bottom: 34%;
+  width: 18px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #33475b, #1a2632);
+  box-shadow: 0 6px 8px -5px rgba(0, 0, 0, 0.55);
+}
+.propPuck::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 8px;
+  width: 16px;
+  height: 9px;
+  opacity: 0.5;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(33, 230, 255, 0.22) 0,
+    rgba(33, 230, 255, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+/* a small potted "space plant" — a human touch */
+.propPlant {
+  position: absolute;
+  left: 1.5%;
+  bottom: 66%;
+  width: 12px;
+  height: 11px;
+  border-radius: 2px 2px 4px 4px;
+  background: linear-gradient(180deg, #2c3a48, #18222c);
+  box-shadow: 0 6px 8px -5px rgba(0, 0, 0, 0.5);
+}
+.propPlant::before,
+.propPlant::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  width: 5px;
+  height: 12px;
+  border-radius: 60% 60% 50% 50%;
+  background: linear-gradient(180deg, #3c6a5a, #234439);
+}
+.propPlant::before {
+  left: 1px;
+  transform: rotate(-22deg);
+}
+.propPlant::after {
+  right: 1px;
+  transform: rotate(20deg);
+}
+
+/* ---- more RIGHT-margin props ---- */
+/* a docked handheld/communicator leaning in its cradle */
+.propComm {
+  position: absolute;
+  right: 2.4%;
+  bottom: 57%;
+  width: 20px;
+  height: 6px;
+  border-radius: 2px;
+  background: #26333f;
+  box-shadow: 0 6px 8px -5px rgba(0, 0, 0, 0.55);
+}
+.propComm::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  bottom: 3px;
+  width: 11px;
+  height: 20px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #31455a, #1a2836);
+  transform: rotate(-8deg);
+  box-shadow: inset 0 2px 3px rgba(120, 170, 210, 0.18);
+}
+/* a small status monitor: faint scan line + a slow blinking indicator */
+.propMonitor {
+  position: absolute;
+  right: 1.8%;
+  bottom: 32%;
+  width: 26px;
+  height: 18px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #223140, #141d27);
+  box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(120, 170, 210, 0.12);
+}
+.propMonitor::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 50%;
+  height: 1px;
+  background: rgba(33, 230, 255, 0.28);
+  box-shadow: 0 0 4px rgba(33, 230, 255, 0.2);
+}
+.propMonitor::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 4px rgba(33, 230, 255, 0.65);
+  animation: deckBlink 2s steps(1, end) infinite;
+}
+/* a cable coiling off the desk edge */
+.propCable {
+  position: absolute;
+  right: -0.4%;
+  bottom: 44%;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(58, 78, 98, 0.5);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.propCable::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(48, 66, 84, 0.38);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+/* ---- FRONT control strip near the viewer (dim, below the console) ---- */
+.propKeyboard {
+  position: absolute;
+  left: 50%;
+  bottom: 6.5%;
+  transform: translateX(-50%);
+  width: min(320px, 30%);
+  height: 13px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #202c38, #131b24);
+  box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.55);
+  opacity: 0.85;
+}
+.propKeyboard::before {
+  content: "";
+  position: absolute;
+  inset: 3px 6px;
+  background: repeating-linear-gradient(
+      90deg,
+      rgba(150, 190, 230, 0.12) 0,
+      rgba(150, 190, 230, 0.12) 1px,
+      transparent 1px,
+      transparent 7px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(150, 190, 230, 0.1) 0,
+      rgba(150, 190, 230, 0.1) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+}
+.propKeyboard::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(33, 230, 255, 0.42);
+  box-shadow: 0 0 5px rgba(33, 230, 255, 0.32),
+    -9px 0 0 -1px rgba(255, 130, 70, 0.28);
+}
+
+.deckLed {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(33, 230, 255, 0.18);
+  box-shadow: inset 0 0 3px rgba(33, 230, 255, 0.3);
+}
+.deckLedOn {
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.85);
+  animation: deckBlink 2.6s steps(1, end) infinite;
+}
+@keyframes deckBlink {
+  0%,
+  62% {
+    opacity: 1;
+  }
+  63%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* The large console leaves only a thin desk margin, so the props only fit on
+   wide screens — hide them below that (console + legibility take priority). */
+@media (max-width: 1300px) {
+  .propMug,
+  .propPen,
+  .propStylus,
+  .propSlates,
+  .propPuck,
+  .propPlant,
+  .deskObject,
+  .propHolo,
+  .deckLights,
+  .propComm,
+  .propMonitor,
+  .propCable,
+  .propKeyboard {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .window {
+    top: clamp(12px, 3vh, 36px);
+    height: clamp(140px, 22vh, 260px);
+  }
+  /* keep the desk's back edge meeting the (shorter) mobile window base */
+  .deskSurface {
+    top: calc(clamp(12px, 3vh, 36px) + clamp(140px, 22vh, 260px) - 8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambientGlow,
+  .deckLedOn,
+  .propMonitor::after {
+    animation: none;
+  }
+}

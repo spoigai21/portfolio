@@ -83,8 +83,8 @@
 
 .item {
   position: relative;
-  flex: 0 0 320px;
-  max-width: 320px;
+  flex: 0 0 360px;
+  max-width: 360px;
   scroll-snap-align: start;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .role {
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   line-height: 1.25;
   margin: 0;
   overflow-wrap: break-word;
@@ -137,9 +137,9 @@
 
 .company {
   font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  color: #b9a9ff;
-  margin: 5px 0 12px;
+  font-size: 0.9rem;
+  color: #cbbcff;
+  margin: 6px 0 13px;
   overflow-wrap: break-word;
 }
 
@@ -155,9 +155,9 @@
 .bullets li {
   position: relative;
   padding-left: 16px;
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: var(--text-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-bright);
   overflow-wrap: break-word;
 }
 

@@ -3,14 +3,30 @@
    Dim, understated cockpit-HUD language: cyan lines, brackets, monospace.
    ============================================================ */
 
-/* ---------- the bordered log document ---------- */
-.frame {
-  position: relative;
-  border: 1px solid rgba(33, 230, 255, 0.18);
+/* ---------- the journal: a FIXED, bounded screen sitting on the desk ----------
+   The window + desk are pinned; only .scroll (the cards) scrolls, so the scene
+   stays stationary and reading feels like paging through the log while seated. */
+.journal {
+  position: fixed;
+  left: 50%;
+  /* THE dominant, readable element: a large screen sitting low on the desk,
+     below the (now smaller) window and extending up into the freed space. The
+     desk reads as a thin frame around it. */
+  top: clamp(180px, 30vh, 400px);
+  bottom: clamp(66px, 9.5vh, 140px);
+  width: min(1080px, 88vw);
+  z-index: 1;
+  /* SHARED plane with the desk (matched in ShipCabin.module.css). 14° — enough
+     to read clearly as "on a desk" while keeping card text legible. */
+  transform: translateX(-50%) perspective(2200px) rotateX(14deg);
+  transform-origin: 50% 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(33, 230, 255, 0.22);
   border-radius: 14px;
-  padding: clamp(16px, 3vw, 32px);
-  /* dark scrim (legibility behind the cards) + faint terminal scanlines */
-  background: linear-gradient(rgba(4, 8, 18, 0.55), rgba(4, 8, 18, 0.58)),
+  padding: clamp(14px, 2.4vw, 26px);
+  /* OPAQUE dark panel so card text is fully legible + faint terminal scanlines */
+  background: linear-gradient(rgba(6, 10, 20, 0.96), rgba(5, 8, 16, 0.97)),
     repeating-linear-gradient(
       0deg,
       rgba(33, 230, 255, 0.028) 0,
@@ -18,11 +34,63 @@
       transparent 1px,
       transparent 3px
     );
-  box-shadow: inset 0 0 70px rgba(33, 230, 255, 0.04),
-    0 0 34px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 70px rgba(33, 230, 255, 0.05),
+    0 22px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(33, 230, 255, 0.08);
+}
+/* contact shadow cast onto the desktop just below the journal's base — since it
+   is a child of the (tilted) journal it lies on the same plane, so it reads as
+   the console resting on the surface rather than floating above it. */
+.journal::before {
+  content: "";
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  bottom: -20px;
+  height: 38px;
+  z-index: -1;
+  background: radial-gradient(
+    62% 100% at 50% 0%,
+    rgba(0, 0, 0, 0.55),
+    transparent 72%
+  );
+  filter: blur(7px);
+}
+/* a thin, dim light bar under the console's front edge */
+.journal::after {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  bottom: -5px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(33, 230, 255, 0.3),
+    transparent
+  );
+  box-shadow: 0 0 10px rgba(33, 230, 255, 0.2);
 }
 
-/* corner brackets on the frame */
+/* only this inner area scrolls (the cards); the header above it stays put */
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0; /* let the flex child actually scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(33, 230, 255, 0.4) transparent;
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background: rgba(33, 230, 255, 0.35);
+  border-radius: 999px;
+}
+
+/* corner brackets on the journal */
 .bracket {
   position: absolute;
   width: 20px;
@@ -59,21 +127,18 @@
   border-bottom-right-radius: 14px;
 }
 
-/* ---------- live log header (sticky so it stays with the reader) ---------- */
+/* ---------- fixed title bar at the top of the journal (does not scroll) ------- */
 .logHead {
-  /* static title bar fixed at the top of the log frame — it does not pin/float */
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin: calc(-1 * clamp(16px, 3vw, 32px)) calc(-1 * clamp(16px, 3vw, 32px))
-    clamp(18px, 3vw, 30px);
-  padding: 12px clamp(16px, 3vw, 32px);
+  margin-bottom: clamp(12px, 2vw, 20px);
+  padding-bottom: clamp(10px, 1.6vw, 16px);
   font-family: var(--font-mono), monospace;
-  background: linear-gradient(rgba(6, 11, 22, 0.92), rgba(5, 9, 19, 0.92));
   border-bottom: 1px solid rgba(33, 230, 255, 0.2);
-  border-radius: 14px 14px 0 0;
 }
 
 .logTitle {
