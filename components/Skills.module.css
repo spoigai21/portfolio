@@ -16,6 +16,14 @@
   width: 100%;
   height: clamp(380px, 56vh, 560px);
   touch-action: none;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When the scanner panel is open, slide the orb cluster left so a right-side
+   selected orb clears the panel (the panel is also translucent as a backstop —
+   the clicked orb is never fully hidden). */
+.shifted {
+  transform: translateX(-10%);
 }
 
 /* ---------- readout "screen" behind the orbs ---------- */
@@ -187,5 +195,290 @@
 @media (prefers-reduced-motion: reduce) {
   .tip {
     animation: none;
+  }
+}
+
+/* ============================================================
+   Scanner / targeting readout panel (opens when an orb is clicked)
+   Portaled to <body>, styled to match the cockpit dashboard.
+   ============================================================ */
+.panel {
+  position: fixed;
+  right: clamp(12px, 2.5vw, 30px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(288px, 30vw, 400px);
+  z-index: 46;
+  padding: 20px;
+  overflow: hidden;
+
+  /* hover-driven & purely a readout — never intercept pointer events, so an orb
+     sitting behind the panel keeps its hover (no open/close flicker) */
+  pointer-events: none;
+
+  font-family: var(--font-mono), monospace;
+  color: var(--cyan);
+
+  /* translucent glass so an orb behind it is never fully hidden */
+  background: linear-gradient(rgba(6, 16, 26, 0.82), rgba(4, 10, 20, 0.86)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(33, 230, 255, 0.05) 0,
+      rgba(33, 230, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  border: 1px solid rgba(33, 230, 255, 0.4);
+  border-radius: 8px;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  box-shadow: 0 0 0 1px rgba(33, 230, 255, 0.08),
+    0 0 30px rgba(33, 230, 255, 0.22), inset 0 0 26px rgba(33, 230, 255, 0.08);
+
+  animation: panelIn 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translate(calc(100% + 30px), -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+/* corner brackets */
+.pBracket {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 0 solid rgba(33, 230, 255, 0.85);
+  filter: drop-shadow(0 0 3px rgba(33, 230, 255, 0.5));
+}
+.pbTL {
+  top: 8px;
+  left: 8px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.pbTR {
+  top: 8px;
+  right: 8px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.pbBL {
+  bottom: 8px;
+  left: 8px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.pbBR {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* moving scanline sweep over the panel face */
+.panelScan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 42%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(33, 230, 255, 0.09) 48%,
+    rgba(33, 230, 255, 0.16) 50%,
+    rgba(33, 230, 255, 0.09) 52%,
+    transparent
+  );
+  animation: panelSweep 5.5s linear infinite;
+}
+@keyframes panelSweep {
+  0% {
+    transform: translateY(-110%);
+  }
+  100% {
+    transform: translateY(320%);
+  }
+}
+
+.panelClose {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  font-family: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: rgba(33, 230, 255, 0.7);
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.panelClose:hover {
+  color: #e6feff;
+  text-shadow: 0 0 8px rgba(33, 230, 255, 0.8);
+}
+
+.panelInner {
+  position: relative;
+  z-index: 1;
+}
+
+.panelEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  color: rgba(33, 230, 255, 0.6);
+  margin-bottom: 10px;
+}
+.panelDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
+  animation: panelBlink 1.4s steps(1, end) infinite;
+}
+@keyframes panelBlink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.panelTitle {
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.3;
+  color: #e6feff;
+  text-shadow: 0 0 8px rgba(33, 230, 255, 0.7),
+    0 0 18px rgba(33, 230, 255, 0.35);
+  margin: 0;
+}
+.pBrk {
+  color: rgba(33, 230, 255, 0.65);
+  font-weight: 400;
+}
+
+.panelClass {
+  margin-top: 6px;
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  color: rgba(33, 230, 255, 0.5);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(33, 230, 255, 0.16);
+}
+
+.panelBlock {
+  margin-top: 16px;
+}
+.panelLabel {
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
+  color: rgba(33, 230, 255, 0.5);
+  margin-bottom: 7px;
+}
+.panelValue {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--text-body);
+}
+.panelDesc {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: #cfeff7;
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.2);
+}
+
+/* signal-strength / power gauge */
+.panelSignalRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.signal {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+}
+.seg {
+  flex: 1;
+  height: 14px;
+  border-radius: 1px;
+  background: rgba(33, 230, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(33, 230, 255, 0.12);
+}
+.segOn {
+  background: linear-gradient(
+    rgba(33, 230, 255, 0.95),
+    rgba(33, 230, 255, 0.65)
+  );
+  box-shadow: 0 0 6px rgba(33, 230, 255, 0.7),
+    inset 0 0 0 1px rgba(33, 230, 255, 0.5);
+}
+.panelPct {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #e6feff;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* On small screens the panel spans most of the width, bottom-anchored. */
+@media (max-width: 640px) {
+  .panel {
+    left: clamp(12px, 4vw, 20px);
+    right: clamp(12px, 4vw, 20px);
+    width: auto;
+    top: auto;
+    bottom: clamp(14px, 4vh, 28px);
+    transform: none;
+    animation: panelInMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes panelInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* on mobile don't shove the grid sideways; the translucent panel handles it */
+  .shifted {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+  .panelScan,
+  .panelDot {
+    animation: none;
+  }
+  .canvas {
+    transition: none;
   }
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Billboard, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { skills } from "@/lib/content";
+import { getSkillDetail } from "@/lib/skillDetails";
 import styles from "./Skills.module.css";
 
 // Orb tints — cyan folded in to match the holographic tooltip.
@@ -59,7 +61,8 @@ function useColumns() {
   useEffect(() => {
     const update = () => {
       const w = window.innerWidth;
-      setCols(w < 480 ? 3 : w < 820 ? 4 : 5);
+      // 20 orbs reflow to even grids: 4 wide (5 rows) narrow, 5 wide (4 rows) up.
+      setCols(w < 560 ? 4 : 5);
     };
     update();
     window.addEventListener("resize", update);
@@ -84,6 +87,55 @@ function useLayout(count, cols) {
     }
     return { positions, width: cols * SPACING, height: rows * SPACING };
   }, [count, cols]);
+}
+
+// Targeting reticle drawn around the selected orb — a steady inner ring plus a
+// set of rotating corner arcs, so it reads as "locked on". Billboarded to always
+// face the camera. Additive + non-raycastable so it never affects orb hovering.
+const RETICLE_ARCS = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+function Reticle({ reduced }) {
+  const ring = useRef();
+  const arcs = useRef();
+
+  useFrame((state) => {
+    if (reduced) return;
+    const t = state.clock.elapsedTime;
+    if (arcs.current) arcs.current.rotation.z = t * 0.7;
+    if (ring.current) ring.current.scale.setScalar(1 + Math.sin(t * 4) * 0.03);
+  });
+
+  return (
+    <Billboard>
+      <mesh ref={ring} raycast={() => null}>
+        <ringGeometry args={[1.24, 1.32, 48]} />
+        <meshBasicMaterial
+          color={HOVER_EMISSIVE}
+          transparent
+          opacity={0.7}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      <group ref={arcs}>
+        {RETICLE_ARCS.map((a) => (
+          <mesh key={a} raycast={() => null}>
+            <ringGeometry args={[1.42, 1.52, 20, 1, a, 0.85]} />
+            <meshBasicMaterial
+              color={HOVER_EMISSIVE}
+              transparent
+              opacity={0.85}
+              side={THREE.DoubleSide}
+              toneMapped={false}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        ))}
+      </group>
+    </Billboard>
+  );
 }
 
 function Orb({ position, color, logo, index, hovered, onHover, reduced }) {
@@ -121,7 +173,7 @@ function Orb({ position, color, logo, index, hovered, onHover, reduced }) {
         8,
         delta
       );
-      // flash the hovered orb cyan to match the tooltip, ease back to base tint
+      // flash the hovered orb cyan; ease back to base tint when not hovered
       const k = 1 - Math.exp(-8 * delta);
       mat.emissive.lerp(isHovered ? hoverColor : baseColor, k);
     }
@@ -146,6 +198,9 @@ function Orb({ position, color, logo, index, hovered, onHover, reduced }) {
         <sphereGeometry args={[1.05, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
+
+      {/* targeting reticle shows on hover, locking onto the readout's system */}
+      {isHovered && <Reticle reduced={reduced} />}
 
       {/* glassy glowing core, tinted from the palette */}
       <mesh ref={sphere}>
@@ -227,6 +282,7 @@ function Scene({ cols, hovered, onHover, reduced }) {
       <OrbitControls
         enablePan={false}
         enableZoom={false}
+        // hold still while a system is targeted so the reticle stays aligned
         autoRotate={!reduced && hovered === null}
         autoRotateSpeed={0.12}
         minPolarAngle={Math.PI / 2.6}
@@ -237,54 +293,94 @@ function Scene({ cols, hovered, onHover, reduced }) {
   );
 }
 
+// Ship "scanner lock" readout for the hovered skill. Rendered in a portal to
+// <body> so it's a true viewport-fixed overlay (the Reveal wrapper's
+// will-change:transform would otherwise trap position:fixed). Pointer-transparent
+// (see CSS) so it never steals hover from an orb sitting behind it.
+function SkillPanel({ skill }) {
+  const detail = getSkillDetail(skill.name);
+  return createPortal(
+    <aside
+      className={styles.panel}
+      role="status"
+      aria-label={`Module readout: ${skill.name}`}
+    >
+      <span className={`${styles.pBracket} ${styles.pbTL}`} aria-hidden="true" />
+      <span className={`${styles.pBracket} ${styles.pbTR}`} aria-hidden="true" />
+      <span className={`${styles.pBracket} ${styles.pbBL}`} aria-hidden="true" />
+      <span className={`${styles.pBracket} ${styles.pbBR}`} aria-hidden="true" />
+      <div className={styles.panelScan} aria-hidden="true" />
+
+      <div className={styles.panelInner}>
+        <div className={styles.panelEyebrow}>
+          <span className={styles.panelDot} /> SCANNING
+        </div>
+        <h3 className={styles.panelTitle}>
+          <span className={styles.pBrk}>[</span> MODULE:{" "}
+          {skill.name.toUpperCase()} <span className={styles.pBrk}>]</span>
+        </h3>
+        <div className={styles.panelClass}>CLASS // {detail.category.toUpperCase()}</div>
+
+        <div className={styles.panelBlock}>
+          <div className={styles.panelLabel}>USED IN</div>
+          <div className={styles.panelValue}>{detail.deployedIn}</div>
+        </div>
+
+        <div className={styles.panelBlock}>
+          <div className={styles.panelLabel}>LOG</div>
+          <div className={styles.panelDesc}>&gt; {detail.relationship}</div>
+        </div>
+      </div>
+    </aside>,
+    document.body
+  );
+}
+
 export default function SkillOrbs() {
   const cols = useColumns();
   const [hovered, setHovered] = useState(null);
-  const wrapRef = useRef(null);
-  const tipRef = useRef(null);
-  const reduced = useRef(false);
+  // Which skill the readout panel is showing. Follows `hovered`, but lingers
+  // briefly when hover clears so gliding across the gaps between orbs doesn't
+  // make the panel flicker/unmount — it just swaps content.
+  const [panelIndex, setPanelIndex] = useState(null);
+  const [reduced, setReduced] = useState(false);
+  const hideTimer = useRef();
 
   useEffect(() => {
-    reduced.current =
+    setReduced(
       typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
   }, []);
 
-  // Position the tooltip from real DOM pointer coordinates (reliable), while
-  // the r3f scene handles which orb is hovered.
-  const handlePointerMove = (e) => {
-    if (!wrapRef.current || !tipRef.current) return;
-    const rect = wrapRef.current.getBoundingClientRect();
-    tipRef.current.style.left = `${e.clientX - rect.left}px`;
-    tipRef.current.style.top = `${e.clientY - rect.top}px`;
-  };
+  useEffect(() => {
+    clearTimeout(hideTimer.current);
+    if (hovered !== null) {
+      setPanelIndex(hovered);
+    } else {
+      hideTimer.current = setTimeout(() => setPanelIndex(null), 180);
+    }
+    return () => clearTimeout(hideTimer.current);
+  }, [hovered]);
 
   return (
-    <div
-      ref={wrapRef}
-      className={styles.canvas}
-      onPointerMove={handlePointerMove}
-    >
-      <Canvas
-        dpr={[1, 2]}
-        camera={{ fov: 50, position: [0, 0, 14] }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <Scene
-          cols={cols}
-          hovered={hovered}
-          onHover={setHovered}
-          reduced={reduced.current}
-        />
-      </Canvas>
-
-      <div
-        ref={tipRef}
-        className={styles.tip}
-        style={{ display: hovered !== null ? "block" : "none" }}
-      >
-        {hovered !== null ? skills[hovered].name : ""}
+    <>
+      <div className={styles.canvas}>
+        <Canvas
+          dpr={[1, 2]}
+          camera={{ fov: 50, position: [0, 0, 14] }}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <Scene
+            cols={cols}
+            hovered={hovered}
+            onHover={setHovered}
+            reduced={reduced}
+          />
+        </Canvas>
       </div>
-    </div>
+
+      {panelIndex !== null && <SkillPanel skill={skills[panelIndex]} />}
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import ProjectsCarousel from "@/components/ProjectsCarousel";
+import LogTerminal from "@/components/LogTerminal";
 
 export const metadata = {
   title: "Work — Shayan Poigai",
@@ -9,12 +10,10 @@ export const metadata = {
 export default function ProjectsPage() {
   return (
     <main className="page">
-      <section className="section">
-        <div className="container">
-          <ExperienceTimeline />
-          <ProjectsCarousel />
-        </div>
-      </section>
+      <LogTerminal>
+        <ExperienceTimeline />
+        <ProjectsCarousel />
+      </LogTerminal>
     </main>
   );
 }

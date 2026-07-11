@@ -1,6 +1,6 @@
-/* Full-viewport HUD chrome. Above the orbs (they're in the section at z 1) but
-   below the nav / back-home control (z 50). Never captures pointer events, and
-   every element lives in the margins — the center is left clear for the orbs. */
+/* Full-viewport cockpit chrome. Above the orbs (they're in the section at z 1)
+   but below the nav / back-home control (z 50). Never captures pointer events;
+   the structure lives at the margins and bottom, leaving the center as window. */
 .hud {
   position: fixed;
   inset: 0;
@@ -14,162 +14,123 @@
   pointer-events: none;
 }
 
-/* ---------- cockpit interior ---------- */
-/* Heavy vignette: the cabin around you is dark, the window in the middle is
-   clear. Biased slightly upward so the "horizon" sits above center, and pulled
-   in harder at the bottom where the console rises. */
-.hull {
+/* ---------- canopy structure (SVG) ---------- */
+/* The opaque hull + window opening + struts + dashboard + glass. Sits beneath
+   the readouts so the text reads as painted onto the ship structure. */
+.canopy {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-      125% 105% at 50% 40%,
-      transparent 34%,
-      rgba(4, 3, 16, 0.28) 58%,
-      rgba(3, 2, 12, 0.72) 84%,
-      rgba(1, 1, 7, 0.95) 100%
-    ),
-    linear-gradient(
-      to top,
-      rgba(1, 1, 7, 0.9) 0%,
-      rgba(1, 1, 7, 0) 26%
-    );
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-/* Diagonal glass reflection — a couple of very faint sheens across the canopy. */
-.glare {
+/* ---------- header (on the top canopy frame) ---------- */
+.header {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-      118deg,
-      transparent 12%,
-      rgba(174, 240, 255, 0.045) 20%,
-      transparent 27%,
-      transparent 58%,
-      rgba(174, 240, 255, 0.03) 64%,
-      transparent 70%
-    );
-  mix-blend-mode: screen;
-}
-
-/* Dark chamfered frame masses that fill the corners like canopy bracing. The
-   bright cyan L-brackets (below) sit on top of these. */
-.plate {
-  position: absolute;
-  width: clamp(120px, 18vw, 240px);
-  height: clamp(120px, 18vw, 240px);
-}
-.pTL {
-  top: 0;
-  left: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 40%, 40% 100%, 0 100%);
-  background: linear-gradient(
-    135deg,
-    rgba(6, 12, 22, 0.92) 22%,
-    rgba(6, 12, 22, 0.5) 58%,
-    transparent 78%
-  );
-}
-.pTR {
-  top: 0;
-  right: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 60% 100%, 0 40%);
-  background: linear-gradient(
-    225deg,
-    rgba(6, 12, 22, 0.92) 22%,
-    rgba(6, 12, 22, 0.5) 58%,
-    transparent 78%
-  );
-}
-.pBL {
-  bottom: 0;
-  left: 0;
-  clip-path: polygon(0 0, 60% 0, 100% 40%, 100% 100%, 0 100%);
-  background: linear-gradient(
-    45deg,
-    rgba(6, 12, 22, 0.92) 22%,
-    rgba(6, 12, 22, 0.5) 58%,
-    transparent 78%
-  );
-}
-.pBR {
-  bottom: 0;
-  right: 0;
-  clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%, 0 40%);
-  background: linear-gradient(
-    315deg,
-    rgba(6, 12, 22, 0.92) 22%,
-    rgba(6, 12, 22, 0.5) 58%,
-    transparent 78%
-  );
-}
-
-/* Canopy coaming along the top edge — a thin dark rail with a cyan under-glow,
-   dipping gently in the center. The header reads as mounted on it. */
-.coamingTop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: clamp(58px, 9vh, 104px);
-  clip-path: polygon(0 0, 100% 0, 100% 62%, 62% 62%, 50% 100%, 38% 62%, 0 62%);
-  background: linear-gradient(
-    to bottom,
-    rgba(3, 4, 12, 0.85) 0%,
-    rgba(5, 9, 20, 0.6) 55%,
-    rgba(33, 230, 255, 0.12) 90%,
-    rgba(33, 230, 255, 0.22) 100%
-  );
-}
-
-/* Instrument console rising from the bottom — the strongest "I'm in a cockpit"
-   cue. Raised side pillars, a gentle central dip, an illuminated coaming lip. */
-.dash {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: clamp(96px, 15vh, 168px);
-  clip-path: polygon(
-    0 100%,
-    0 46%,
-    9% 20%,
-    30% 34%,
-    50% 40%,
-    70% 34%,
-    91% 20%,
-    100% 46%,
-    100% 100%
-  );
-  background: linear-gradient(
-    to top,
-    rgba(2, 3, 10, 0.98) 0%,
-    rgba(5, 9, 20, 0.92) 42%,
-    rgba(10, 22, 38, 0.55) 74%,
-    rgba(33, 230, 255, 0.12) 90%,
-    rgba(33, 230, 255, 0.24) 98%,
-    transparent 100%
-  );
-}
-
-/* soft up-glow from the instruments lighting the console face */
-.dashGlow {
-  position: absolute;
+  top: clamp(14px, 2.6vh, 30px);
   left: 50%;
-  bottom: 0;
-  width: min(70%, 640px);
-  height: 70%;
   transform: translateX(-50%);
-  background: radial-gradient(
-    80% 120% at 50% 100%,
-    rgba(33, 230, 255, 0.14) 0%,
-    transparent 70%
-  );
+  text-align: center;
+  white-space: nowrap;
 }
 
+.title {
+  font-size: clamp(1.1rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  /* the em-based letter-spacing adds trailing space; nudge back to visual center */
+  text-indent: 0.42em;
+  color: #e6feff;
+  text-shadow: 0 0 8px rgba(33, 230, 255, 0.85),
+    0 0 22px rgba(33, 230, 255, 0.45);
+}
+
+.bracket {
+  color: rgba(33, 230, 255, 0.72);
+  font-weight: 400;
+}
+
+.subtitle {
+  margin-top: 6px;
+  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  color: rgba(33, 230, 255, 0.55);
+  animation: hudFlicker 4.2s ease-in-out infinite;
+}
+
+/* ---------- readouts (painted onto hull / console) ---------- */
+.readout {
+  position: absolute;
+  font-size: clamp(0.58rem, 1.4vw, 0.7rem);
+  letter-spacing: 0.16em;
+  color: rgba(33, 230, 255, 0.7);
+  text-shadow: 0 0 6px rgba(33, 230, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topRight {
+  top: clamp(16px, 2.8vh, 32px);
+  right: clamp(26px, 4.5vw, 54px);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+.coords {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.vel {
+  color: rgba(33, 230, 255, 0.5);
+  letter-spacing: 0.24em;
+}
+
+/* status lines sit low, on the console face */
+.bottomLeft {
+  bottom: clamp(22px, 4vh, 42px);
+  left: clamp(26px, 5vw, 60px);
+}
+.bottomRight {
+  bottom: clamp(22px, 4vh, 42px);
+  right: clamp(26px, 5vw, 60px);
+}
+.bars {
+  letter-spacing: 0.05em;
+  color: rgba(33, 230, 255, 0.8);
+}
+
+/* blinking scanner indicator */
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
+  animation: hudBlink 1.6s steps(1, end) infinite;
+}
+
+/* vertical scanner tag riding the left canopy pillar */
+.scannerLabel {
+  position: absolute;
+  left: clamp(12px, 2vw, 26px);
+  top: 46%;
+  transform: rotate(180deg) translateX(50%);
+  transform-origin: center;
+  writing-mode: vertical-rl;
+  font-size: clamp(0.5rem, 1.2vw, 0.6rem);
+  letter-spacing: 0.42em;
+  color: rgba(33, 230, 255, 0.34);
+}
+
+/* ---------- console controls on the dashboard ---------- */
 .dashLights {
   position: absolute;
   left: 50%;
-  bottom: clamp(20px, 3.4vh, 34px);
+  bottom: clamp(34px, 6.5vh, 66px);
   transform: translateX(-50%);
   display: flex;
   gap: clamp(10px, 2vw, 20px);
@@ -199,159 +160,13 @@
 .dashLabel {
   position: absolute;
   left: 50%;
-  bottom: clamp(9px, 1.6vh, 16px);
+  bottom: clamp(18px, 3.4vh, 34px);
   transform: translateX(-50%);
   font-size: clamp(0.5rem, 1.1vw, 0.6rem);
   letter-spacing: 0.34em;
   text-indent: 0.34em;
   white-space: nowrap;
-  color: rgba(33, 230, 255, 0.4);
-}
-
-/* ---------- viewport frame ---------- */
-.frame {
-  position: absolute;
-  inset: clamp(12px, 2.4vw, 30px);
-  border: 1px solid rgba(33, 230, 255, 0.14);
-  border-radius: 10px;
-  box-shadow: inset 0 0 60px rgba(33, 230, 255, 0.04);
-}
-
-/* L-shaped brackets sitting on the frame corners */
-.corner {
-  position: absolute;
-  width: clamp(24px, 4vw, 46px);
-  height: clamp(24px, 4vw, 46px);
-  border: 0 solid rgba(33, 230, 255, 0.7);
-  filter: drop-shadow(0 0 4px rgba(33, 230, 255, 0.5));
-}
-.tl {
-  top: clamp(12px, 2.4vw, 30px);
-  left: clamp(12px, 2.4vw, 30px);
-  border-top-width: 2px;
-  border-left-width: 2px;
-  border-top-left-radius: 10px;
-}
-.tr {
-  top: clamp(12px, 2.4vw, 30px);
-  right: clamp(12px, 2.4vw, 30px);
-  border-top-width: 2px;
-  border-right-width: 2px;
-  border-top-right-radius: 10px;
-}
-.bl {
-  bottom: clamp(12px, 2.4vw, 30px);
-  left: clamp(12px, 2.4vw, 30px);
-  border-bottom-width: 2px;
-  border-left-width: 2px;
-  border-bottom-left-radius: 10px;
-}
-.br {
-  bottom: clamp(12px, 2.4vw, 30px);
-  right: clamp(12px, 2.4vw, 30px);
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-  border-bottom-right-radius: 10px;
-}
-
-/* ---------- header ---------- */
-.header {
-  position: absolute;
-  top: clamp(22px, 4.5vh, 44px);
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  white-space: nowrap;
-}
-
-.title {
-  font-size: clamp(1.15rem, 3.2vw, 1.85rem);
-  font-weight: 700;
-  letter-spacing: 0.42em;
-  /* the em-based letter-spacing adds trailing space; nudge back to visual center */
-  text-indent: 0.42em;
-  color: #e6feff;
-  text-shadow: 0 0 8px rgba(33, 230, 255, 0.85),
-    0 0 22px rgba(33, 230, 255, 0.45);
-}
-
-.bracket {
-  color: rgba(33, 230, 255, 0.72);
-  font-weight: 400;
-}
-
-.subtitle {
-  margin-top: 8px;
-  font-size: clamp(0.6rem, 1.5vw, 0.72rem);
-  letter-spacing: 0.34em;
-  text-indent: 0.34em;
-  color: rgba(33, 230, 255, 0.55);
-  animation: hudFlicker 4.2s ease-in-out infinite;
-}
-
-/* ---------- readouts ---------- */
-.readout {
-  position: absolute;
-  font-size: clamp(0.58rem, 1.4vw, 0.7rem);
-  letter-spacing: 0.16em;
-  color: rgba(33, 230, 255, 0.62);
-  text-shadow: 0 0 6px rgba(33, 230, 255, 0.35);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.topRight {
-  top: clamp(24px, 4.6vw, 46px);
-  right: clamp(28px, 5vw, 58px);
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  text-align: right;
-}
-.coords {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.vel {
   color: rgba(33, 230, 255, 0.42);
-  letter-spacing: 0.24em;
-}
-
-.bottomLeft {
-  bottom: clamp(24px, 4.6vw, 46px);
-  left: clamp(28px, 5vw, 58px);
-}
-.bottomRight {
-  bottom: clamp(24px, 4.6vw, 46px);
-  right: clamp(28px, 5vw, 58px);
-}
-.bars {
-  letter-spacing: 0.05em;
-  color: rgba(33, 230, 255, 0.75);
-}
-
-/* blinking scanner indicator */
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px rgba(33, 230, 255, 0.9);
-  animation: hudBlink 1.6s steps(1, end) infinite;
-}
-
-/* vertical scanner tag riding the left edge */
-.scannerLabel {
-  position: absolute;
-  left: clamp(16px, 2.6vw, 34px);
-  top: 50%;
-  transform: rotate(180deg) translateX(50%);
-  transform-origin: center;
-  writing-mode: vertical-rl;
-  font-size: clamp(0.52rem, 1.2vw, 0.62rem);
-  letter-spacing: 0.42em;
-  color: rgba(33, 230, 255, 0.3);
 }
 
 @keyframes hudBlink {
@@ -379,25 +194,13 @@
   }
 }
 
-/* On short/narrow screens, drop the side tag and thin the framing so nothing
-   crowds the orbs. */
+/* On short/narrow screens, thin the chrome so nothing crowds the orbs. */
 @media (max-width: 640px) {
   .scannerLabel {
     display: none;
   }
   .vel {
     display: none;
-  }
-  /* keep the framing out of the way of the orbs on small screens */
-  .plate {
-    width: clamp(70px, 22vw, 110px);
-    height: clamp(70px, 22vw, 110px);
-  }
-  .dash {
-    height: clamp(78px, 12vh, 120px);
-  }
-  .coamingTop {
-    height: clamp(44px, 7vh, 72px);
   }
   .dashLabel {
     letter-spacing: 0.2em;

@@ -5,6 +5,7 @@ import Galaxy from "./Galaxy";
 import Nebula from "./Nebula";
 import PlanetSurface from "./PlanetSurface";
 import ShipWindow from "./ShipWindow";
+import CaptainsLog from "./CaptainsLog";
 import FloatingStars from "./FloatingStars";
 import ContactVoid from "./ContactVoid";
 
@@ -15,6 +16,9 @@ import ContactVoid from "./ContactVoid";
 function Backdrop({ pathname }) {
   if (pathname === "/about") return <Nebula />;
   if (pathname === "/now") return <PlanetSurface />;
+  // Work page reads like a ship's log/archive rather than open galaxy — this
+  // also replaces the bright galaxy streak that used to cross behind the cards.
+  if (pathname === "/projects") return <CaptainsLog />;
   return <Galaxy />;
 }
 
