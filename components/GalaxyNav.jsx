@@ -21,7 +21,7 @@ const PLANETS = [
   { label: "Now", href: "/now", type: "rock", size: 0.54, radius: 4.9, phase: (1 * TAU) / 5, incl: -0.24 },
   { label: "Skills", href: "/skills", type: "ice", size: 0.5, radius: 6.4, phase: (2 * TAU) / 5, incl: 0.28 },
   { label: "About", href: "/about", type: "emerald", size: 0.64, radius: 7.9, phase: (3 * TAU) / 5, incl: -0.18 },
-  { label: "Work", href: "/projects", type: "gas", size: 0.98, radius: 9.4, phase: (4 * TAU) / 5, incl: 0.12 },
+  { label: "Work", href: "/work", type: "gas", size: 0.98, radius: 9.4, phase: (4 * TAU) / 5, incl: 0.12 },
 ];
 
 // One constant angular velocity for every planet (rad/s) → a calm, rigid sweep

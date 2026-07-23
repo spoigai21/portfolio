@@ -27,7 +27,7 @@ export default function SiteBackdrop() {
   if (pathname === "/skills") return <ShipWindow />;
   // Work page is the interior of a ship — enclosed cabin with a porthole. No
   // full-screen starfield or shooting stars; space shows only through the window.
-  if (pathname === "/projects") return <ShipCabin />;
+  if (pathname === "/work") return <ShipCabin />;
   return (
     <>
       <Backdrop pathname={pathname} />

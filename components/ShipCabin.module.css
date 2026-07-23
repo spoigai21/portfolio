@@ -35,8 +35,8 @@
   left: 50%;
   transform: translateX(-50%);
   /* smaller footprint so the console can dominate below it */
-  width: min(1120px, 90vw);
-  height: clamp(150px, 25vh, 320px);
+  width: min(1000px, 84vw);
+  height: clamp(126px, 20vh, 264px);
 }
 
 .windowGlass {
@@ -179,9 +179,9 @@
   /* a thin frame AROUND the large console: back edge meets the (smaller) window
      base, near edge sits on the front lip; wider than the console so it shows as
      a border on all sides. */
-  top: calc(clamp(16px, 3vh, 44px) + clamp(150px, 25vh, 320px) - 8px);
+  top: calc(clamp(16px, 3vh, 44px) + clamp(126px, 20vh, 264px) - 8px);
   bottom: clamp(30px, 4.2vh, 52px);
-  width: min(1400px, 98vw);
+  width: min(1580px, 99vw);
   border-radius: 10px 10px 0 0;
   background:
     /* overhead light pool on the desktop, near the front */
@@ -198,7 +198,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1400px, 98vw);
+  width: min(1580px, 99vw);
   bottom: 0;
   height: clamp(30px, 4.2vh, 52px);
   border-radius: 0 0 5px 5px;
@@ -591,11 +591,11 @@
 @media (max-width: 640px) {
   .window {
     top: clamp(12px, 3vh, 36px);
-    height: clamp(140px, 22vh, 260px);
+    height: clamp(116px, 18vh, 220px);
   }
   /* keep the desk's back edge meeting the (shorter) mobile window base */
   .deskSurface {
-    top: calc(clamp(12px, 3vh, 36px) + clamp(140px, 22vh, 260px) - 8px);
+    top: calc(clamp(12px, 3vh, 36px) + clamp(116px, 18vh, 220px) - 8px);
   }
 }
 

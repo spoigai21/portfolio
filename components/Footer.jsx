@@ -8,7 +8,7 @@ export default function Footer() {
   // The Work page is a fixed, non-scrolling "seated at a station" scene, so the
   // page footer would never be reachable — omit it there.
   const pathname = usePathname();
-  if (pathname === "/projects") return null;
+  if (pathname === "/work") return null;
 
   return (
     <footer className={styles.footer}>

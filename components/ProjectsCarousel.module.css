@@ -161,10 +161,22 @@
   }
 }
 
+/* shrink-wraps the video so the close button can sit on the video's own
+   corner (not the screen corner) and the control bar stays within view */
+.lightboxInner {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
 .lightboxVideo {
-  max-width: min(1100px, 100%);
-  max-height: 85vh;
+  display: block;
+  max-width: min(1040px, 94vw);
+  /* leave clear headroom below the video so the native scrub bar never lands
+     at the very bottom edge of the screen — it stays easy to see and grab */
+  max-height: 74vh;
   width: auto;
+  height: auto;
   border-radius: 14px;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
   background: #000;
@@ -172,22 +184,27 @@
 
 .lightboxClose {
   position: absolute;
-  top: clamp(12px, 3vw, 28px);
-  right: clamp(12px, 3vw, 28px);
-  width: 44px;
-  height: 44px;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(33, 230, 255, 0.4);
-  background: rgba(33, 230, 255, 0.08);
+  border: 1px solid rgba(33, 230, 255, 0.5);
+  /* darker fill so it stays legible over bright video frames */
+  background: rgba(6, 10, 20, 0.72);
   color: var(--cyan);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  line-height: 1;
   cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .lightboxClose:hover {
-  background: rgba(33, 230, 255, 0.18);
-  box-shadow: 0 0 16px rgba(33, 230, 255, 0.35);
+  background: rgba(33, 230, 255, 0.24);
+  box-shadow: 0 0 16px rgba(33, 230, 255, 0.4);
   transform: scale(1.05);
 }
 

@@ -170,22 +170,26 @@ export default function ProjectsCarousel() {
           aria-label={`${lightbox.name} video`}
           onClick={() => setLightbox(null)}
         >
-          <button
-            type="button"
-            className={styles.lightboxClose}
-            onClick={() => setLightbox(null)}
-            aria-label="Close video"
-          >
-            ✕
-          </button>
-          <video
-            className={styles.lightboxVideo}
-            src={lightbox.video}
-            controls
-            autoPlay
-            playsInline
+          <div
+            className={styles.lightboxInner}
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <button
+              type="button"
+              className={styles.lightboxClose}
+              onClick={() => setLightbox(null)}
+              aria-label="Close video"
+            >
+              ✕
+            </button>
+            <video
+              className={styles.lightboxVideo}
+              src={lightbox.video}
+              controls
+              autoPlay
+              playsInline
+            />
+          </div>
         </div>
       )}
     </section>
