@@ -13,6 +13,7 @@ import styles from "./Skills.module.css";
 const PALETTE = [0x7c3aed, 0x4338ca, 0x21e6ff, 0xff1744];
 const HOVER_EMISSIVE = 0x21e6ff; // cyan flash on the hovered orb
 const SPACING = 2.5;
+const Y_OFFSET = 1.6; // nudge the whole grid up in frame
 const LOGO_PX = 256; // rasterization resolution for each logo
 
 // Rasterize an SVG logo onto a canvas and hand back a three.js texture.
@@ -82,7 +83,7 @@ function useLayout(count, cols) {
       const itemsInRow = Math.min(cols, count - row * cols);
       const rowWidth = (itemsInRow - 1) * SPACING;
       const x = col * SPACING - rowWidth / 2;
-      const y = ((rows - 1) * SPACING) / 2 - row * SPACING;
+      const y = ((rows - 1) * SPACING) / 2 - row * SPACING + Y_OFFSET;
       positions.push([x, y, 0]);
     }
     return { positions, width: cols * SPACING, height: rows * SPACING };

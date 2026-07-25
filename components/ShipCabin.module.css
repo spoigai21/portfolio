@@ -181,7 +181,7 @@
      a border on all sides. */
   top: calc(clamp(16px, 3vh, 44px) + clamp(126px, 20vh, 264px) - 8px);
   bottom: clamp(30px, 4.2vh, 52px);
-  width: min(1580px, 99vw);
+  width: min(1680px, 99.5vw);
   border-radius: 10px 10px 0 0;
   background:
     /* overhead light pool on the desktop, near the front */
@@ -198,7 +198,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1580px, 99vw);
+  width: min(1680px, 99.5vw);
   bottom: 0;
   height: clamp(30px, 4.2vh, 52px);
   border-radius: 0 0 5px 5px;
