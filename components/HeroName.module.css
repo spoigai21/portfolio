@@ -1,13 +1,17 @@
-/* Positioned by the hero column in HomeIntro.module.css — `relative` keeps it
-   as the containing block for the comet, which used to key off the old
-   absolute placement. */
+/* Full-bleed on purpose: the comet's speed is derived from this element's
+   width (it crosses width + 80px in a fixed 2400ms), so narrowing it to the
+   text's own width slows the streak down and stretches out the reveal. */
 .name {
-  position: relative;
+  position: absolute;
+  top: clamp(84px, 15vh, 165px);
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   white-space: nowrap;
+  z-index: 4;
   margin: 0;
 
   font-family: var(--font-mono), monospace;

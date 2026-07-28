@@ -1,7 +1,5 @@
 import Link from "next/link";
 import HeroName from "./HeroName";
-import { profile } from "@/lib/content";
-import { jobTitle } from "@/lib/site";
 import styles from "./HomeIntro.module.css";
 
 // Everything on the homepage that a crawler needs to read.
@@ -15,6 +13,9 @@ import styles from "./HomeIntro.module.css";
 // HeroName is rendered here rather than inside GalaxyNav so it lands in the
 // initial HTML. It's still a client component (the comet animation needs the
 // DOM), but client components SSR their markup — only ssr:false skips that.
+//
+// The hero deliberately shows the name alone. The bio and job title live in
+// the page metadata, the JSON-LD Person, and /about — not as extra hero copy.
 const destinations = [
   { label: "About", href: "/about" },
   { label: "Work", href: "/work" },
@@ -26,12 +27,7 @@ const destinations = [
 export default function HomeIntro() {
   return (
     <>
-      <div className={styles.heroText}>
-        <HeroName />
-        <p className={styles.role}>{jobTitle}</p>
-      </div>
-
-      <p className={styles.bio}>{profile.now}</p>
+      <HeroName />
 
       {/* Real anchors so the orbiting planets aren't the only path to the rest
           of the site. Visually hidden (the planets are the visual nav) but
