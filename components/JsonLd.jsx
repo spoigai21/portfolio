@@ -5,7 +5,6 @@ import {
   jobTitle,
   almaMater,
   sameAs,
-  abs,
 } from "@/lib/site";
 import { profile } from "@/lib/content";
 
@@ -20,6 +19,12 @@ import { profile } from "@/lib/content";
 //
 // Note: schema.org's Person type has no `almaMater` property — `alumniOf` is
 // the correct encoding for the same concept, so that's what's used here.
+//
+// Deliberately no ProfilePage node. Search Console flagged it as invalid
+// ("Missing field mainEntity"), and Google scopes that type to sites where
+// users create profiles — social networks, forums, review platforms. On a
+// personal site it earns no rich result even when valid, so the Person entity
+// carries the identity on its own.
 const personId = `${siteUrl}/#person`;
 const siteId = `${siteUrl}/#website`;
 
@@ -65,15 +70,6 @@ const graph = {
       inLanguage: "en-US",
       publisher: { "@id": personId },
       about: { "@id": personId },
-    },
-    {
-      "@type": "ProfilePage",
-      "@id": abs("/#profilepage"),
-      url: siteUrl,
-      name: `${siteName} — ${jobTitle}`,
-      isPartOf: { "@id": siteId },
-      about: { "@id": personId },
-      inLanguage: "en-US",
     },
   ],
 };
