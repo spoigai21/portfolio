@@ -70,7 +70,11 @@ export default function HeroName() {
 
   let letterIndex = -1;
   return (
-    <div ref={rootRef} className={styles.name} role="img" aria-label={profile.name}>
+    <h1 ref={rootRef} className={styles.name}>
+      {/* The animated letters below are one <span> per character, which reads
+          as fragmented text to a crawler and to a screen reader. This carries
+          the clean, unbroken name instead — same words, just not letter-split. */}
+      <span className="sr-only">{profile.name}</span>
       <span ref={cometRef} className={styles.comet} aria-hidden="true" />
       {CHARS.map((ch, i) => {
         if (ch === " ") {
@@ -93,6 +97,6 @@ export default function HeroName() {
           </span>
         );
       })}
-    </div>
+    </h1>
   );
 }

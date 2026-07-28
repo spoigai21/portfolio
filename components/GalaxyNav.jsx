@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import HeroName from "./HeroName";
 import styles from "./GalaxyNav.module.css";
 
 // Destinations as planets. Every planet shares ONE angular speed, so the whole
@@ -538,18 +537,9 @@ export default function GalaxyNav() {
       >
         <Scene hovered={hovered} setHovered={setHovered} reduced={reduced.current} />
       </Canvas>
-
-      {/* comet-written 3D-styled name overlay */}
-      <HeroName />
-
-      {/* Accessible, non-3D fallback nav (keyboard + no-WebGL). */}
-      <nav className={styles.srNav}>
-        {PLANETS.map((p) => (
-          <Link key={p.href} href={p.href}>
-            {p.label}
-          </Link>
-        ))}
-      </nav>
+      {/* The name overlay and the fallback nav now live in HomeIntro, rendered
+          by app/page.jsx — this component is ssr:false, so anything inside it
+          is invisible to crawlers and to browsers without WebGL. */}
     </div>
   );
 }

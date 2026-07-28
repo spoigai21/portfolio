@@ -79,31 +79,3 @@
   transform: translateY(-2px);
 }
 
-/* Fallback nav — visually hidden but reachable by keyboard / assistive tech
-   and usable if WebGL is unavailable. Becomes visible on focus. */
-.srNav {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  gap: 18px;
-  padding: 12px;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.srNav a {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
-  color: var(--cyan);
-}
-
-.srNav:focus-within {
-  clip: auto;
-  clip-path: none;
-  overflow: visible;
-  background: rgba(12, 6, 40, 0.9);
-  border-radius: 8px;
-}

@@ -1,14 +1,14 @@
+/* Positioned by the hero column in HomeIntro.module.css — `relative` keeps it
+   as the containing block for the comet, which used to key off the old
+   absolute placement. */
 .name {
-  position: absolute;
-  top: clamp(84px, 15vh, 165px);
-  left: 0;
-  right: 0;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   white-space: nowrap;
-  z-index: 4;
+  margin: 0;
 
   font-family: var(--font-mono), monospace;
   font-weight: 700;

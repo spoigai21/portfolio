@@ -1,0 +1,79 @@
+/* The name + role, stacked and pinned where the name used to sit alone. */
+.heroText {
+  position: absolute;
+  top: clamp(84px, 15vh, 165px);
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.6vh, 18px);
+  pointer-events: none;
+}
+
+.role {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(0.6rem, 1.5vw, 0.78rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  /* Sits a step below the name in the hierarchy — present, never competing. */
+  color: rgba(203, 233, 255, 0.62);
+  padding-left: 0.42em;
+}
+
+/* One-line bio, pinned low so it stays clear of the orbiting planets. */
+.bio {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(58px, 11vh, 116px);
+  transform: translateX(-50%);
+  width: min(88vw, 52ch);
+  margin: 0;
+  z-index: 4;
+  pointer-events: none;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(0.68rem, 1.7vw, 0.85rem);
+  line-height: 1.7;
+  color: rgba(203, 233, 255, 0.5);
+}
+
+/* Hidden the same way the old in-canvas fallback nav was, but server-rendered
+   and revealed whenever a keyboard user tabs into it. */
+.nav {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  gap: 18px;
+  padding: 12px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.nav a {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--cyan);
+}
+
+.nav:focus-within {
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  background: rgba(12, 6, 40, 0.9);
+  border-radius: 8px;
+}
+
+@media (max-width: 640px) {
+  /* On short screens the bio would crowd the innermost orbit. */
+  .bio {
+    bottom: clamp(40px, 7vh, 72px);
+  }
+}
