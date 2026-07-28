@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Favicon: the hero galaxy distilled to its two readable parts — the
+       glowing core and a tilted orbit ring. A literal screenshot of the scene
+       is unreadable at 16px; this keeps the same palette and idea and still
+       resolves in a browser tab. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#160a3d"/>
+      <stop offset="55%" stop-color="#0c0628"/>
+      <stop offset="100%" stop-color="#0a0420"/>
+    </linearGradient>
+
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fffdf5"/>
+      <stop offset="38%" stop-color="#ffd9a0"/>
+      <stop offset="72%" stop-color="#ff9d3c"/>
+      <stop offset="100%" stop-color="#ff5f2e"/>
+    </radialGradient>
+
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb64d" stop-opacity=".75"/>
+      <stop offset="60%" stop-color="#ff7a3c" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#ff5252" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#21e6ff" stop-opacity=".5"/>
+      <stop offset="35%" stop-color="#21e6ff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity=".8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+
+  <!-- a few stars, kept sparse so they don't turn to noise when scaled down -->
+  <g fill="#dfefff">
+    <circle cx="12" cy="14" r="1.05" opacity=".85"/>
+    <circle cx="52" cy="17" r="0.9" opacity=".6"/>
+    <circle cx="15" cy="49" r="0.85" opacity=".5"/>
+    <circle cx="50" cy="47" r="1" opacity=".7"/>
+  </g>
+
+  <!-- tilted orbit -->
+  <g transform="rotate(-22 32 32)">
+    <ellipse cx="32" cy="32" rx="25" ry="10.5" fill="none"
+             stroke="url(#ring)" stroke-width="3.2" stroke-linecap="round"/>
+    <!-- planet riding the ring, on the near side so it reads as in front -->
+    <circle cx="57" cy="32" r="3.4" fill="#21e6ff"/>
+  </g>
+
+  <!-- glowing core, drawn last so it sits over the ring -->
+  <circle cx="32" cy="32" r="17" fill="url(#halo)"/>
+  <circle cx="32" cy="32" r="9.4" fill="url(#core)"/>
+</svg>
