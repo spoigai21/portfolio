@@ -5,6 +5,8 @@ import {
   jobTitle,
   almaMater,
   sameAs,
+  portraitPath,
+  abs,
 } from "@/lib/site";
 import { profile } from "@/lib/content";
 
@@ -40,6 +42,7 @@ const graph = {
       url: siteUrl,
       jobTitle,
       description: siteDescription,
+      image: abs(portraitPath),
       email: `mailto:${profile.email}`,
       alumniOf: {
         "@type": "CollegeOrUniversity",

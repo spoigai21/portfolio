@@ -1,5 +1,8 @@
+import Image from "next/image";
 import Reveal from "./Reveal";
-import { about, education } from "@/lib/content";
+import portrait from "@/public/images/pfp.jpeg";
+import { about, education, profile } from "@/lib/content";
+import { jobTitle } from "@/lib/site";
 import styles from "./About.module.css";
 
 export default function About() {
@@ -10,12 +13,27 @@ export default function About() {
           <h1 className={styles.heading}>About Me</h1>
         </Reveal>
 
-        <Reveal className={styles.prose}>
-          {about.paragraphs.map((p, i) => (
-            <p key={i} className={styles.para}>
-              {p}
-            </p>
-          ))}
+        {/* Portrait sits in the space the 60ch prose already leaves empty on
+            desktop, and stacks above the text on narrow screens. Same photo as
+            LinkedIn/GitHub on purpose — it reinforces that those profiles and
+            this site are the same person. */}
+        <Reveal className={styles.introRow}>
+          <div className={styles.prose}>
+            {about.paragraphs.map((p, i) => (
+              <p key={i} className={styles.para}>
+                {p}
+              </p>
+            ))}
+          </div>
+
+          <Image
+            src={portrait}
+            alt={`${profile.name}, ${jobTitle}`}
+            className={styles.portrait}
+            sizes="(max-width: 760px) 148px, 200px"
+            placeholder="blur"
+            priority
+          />
         </Reveal>
 
         <Reveal className={styles.outsideBlock}>

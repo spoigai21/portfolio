@@ -25,9 +25,45 @@
   margin-left: 0.45em;
 }
 
-/* ---------- prose ---------- */
+/* ---------- intro: prose + portrait ---------- */
+.introRow {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(26px, 4vw, 60px);
+}
+
 .prose {
   max-width: 60ch;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Holographic ring to match the cyan heading and [ BRACKET ] labels, rather
+   than a plain avatar circle sitting outside the site's language. */
+.portrait {
+  flex: 0 0 auto;
+  width: clamp(128px, 15vw, 200px);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(33, 230, 255, 0.45);
+  box-shadow: 0 0 0 6px rgba(33, 230, 255, 0.06),
+    0 0 18px rgba(33, 230, 255, 0.28), 0 0 44px rgba(33, 230, 255, 0.12);
+}
+
+@media (max-width: 760px) {
+  .introRow {
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(20px, 4vh, 32px);
+  }
+
+  /* Photo leads on mobile, where there's no column to sit beside. */
+  .portrait {
+    order: -1;
+    width: 148px;
+  }
 }
 
 .para {
