@@ -6,6 +6,14 @@ import {
   Bree_Serif,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import {
+  siteUrl,
+  siteName,
+  siteDescription,
+  jobTitle,
+  ogImage,
+} from "@/lib/site";
+import JsonLd from "@/components/JsonLd";
 import SiteBackdrop from "@/components/SiteBackdrop";
 import CursorGlow from "@/components/CursorGlow";
 import BackHome from "@/components/BackHome";
@@ -49,9 +57,56 @@ const breeSerif = Bree_Serif({
 });
 
 export const metadata = {
-  title: "Shayan Poigai — Software Engineer",
-  description:
-    "Full-stack software engineer building AI pipelines, quantum experiments, and products that ship.",
+  // metadataBase makes every relative URL below (canonical, og:image) resolve
+  // to an absolute one, which is what crawlers and social scrapers require.
+  metadataBase: new URL(siteUrl),
+  title: {
+    // Child routes set only their own leaf (e.g. "About") and the template
+    // appends the name, so the name is in EVERY page title.
+    default: `${siteName} — ${jobTitle}`,
+    template: `%s — ${siteName}`,
+  },
+  description: siteDescription,
+  applicationName: siteName,
+  authors: [{ name: siteName, url: siteUrl }],
+  creator: siteName,
+  publisher: siteName,
+  keywords: [
+    "Shayan Poigai",
+    "Shayan Poigai software engineer",
+    "Shayan Poigai portfolio",
+    "Shayan Poigai Santa Clara University",
+    "software engineer",
+    "full-stack engineer",
+    "AI engineer",
+  ],
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName,
+    title: `${siteName} — ${jobTitle}`,
+    description: siteDescription,
+    url: siteUrl,
+    locale: "en_US",
+    images: [ogImage],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteName} — ${jobTitle}`,
+    description: siteDescription,
+    images: [ogImage.url],
+  },
 };
 
 export const viewport = {
@@ -63,6 +118,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <JsonLd />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable}`}
       >
