@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import CanvasBoundary from "./CanvasBoundary";
 import styles from "./BlackHole.module.css";
 
 // Client-only WebGL black hole; never runs during SSR.
@@ -10,5 +11,9 @@ const BlackHole = dynamic(() => import("./BlackHole"), {
 });
 
 export default function BlackHoleCanvas() {
-  return <BlackHole />;
+  return (
+    <CanvasBoundary fallback={<div className={styles.canvas} aria-hidden="true" />}>
+      <BlackHole />
+    </CanvasBoundary>
+  );
 }

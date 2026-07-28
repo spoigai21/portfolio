@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import CanvasBoundary from "./CanvasBoundary";
 import styles from "./Skills.module.css";
 
 // The R3F canvas is client-only and dynamically imported so it never runs
@@ -14,5 +15,11 @@ const SkillOrbs = dynamic(() => import("./SkillOrbs"), {
 });
 
 export default function SkillOrbsCanvas() {
-  return <SkillOrbs />;
+  return (
+    <CanvasBoundary
+      fallback={<div className={styles.canvasFallback} aria-hidden="true" />}
+    >
+      <SkillOrbs />
+    </CanvasBoundary>
+  );
 }

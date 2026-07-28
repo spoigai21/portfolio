@@ -8,7 +8,9 @@ export default function Contact() {
     <section className="section" id="contact">
       <div className="container">
         <Reveal>
-          <h2 className={styles.title}>Get in touch</h2>
+          {/* h1, not h2: this is the page's top-level heading, and the page
+              had no h1 at all. Styling is class-based, so it looks identical. */}
+          <h1 className={styles.title}>Get in touch</h1>
         </Reveal>
 
         <div className={styles.stage}>

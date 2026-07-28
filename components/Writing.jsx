@@ -18,7 +18,9 @@ export default function Writing() {
     <section className="section" id="now">
       <div className="container">
         <Reveal>
-          <h2 className="section-title">What I&apos;m Working On Now</h2>
+          {/* h1, not h2 — top-level heading for /now. Class-based styling, so
+              the appearance is unchanged. */}
+          <h1 className="section-title">What I&apos;m Working On Now</h1>
         </Reveal>
 
         <Reveal>

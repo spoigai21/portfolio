@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import CanvasBoundary from "./CanvasBoundary";
 import Galaxy from "./Galaxy";
 import Nebula from "./Nebula";
 import PlanetSurface from "./PlanetSurface";
@@ -19,7 +20,7 @@ function Backdrop({ pathname }) {
   return <Galaxy />;
 }
 
-export default function SiteBackdrop() {
+function Chooser() {
   const pathname = usePathname();
   if (pathname === "/contact") return <ContactVoid />;
   // /skills gets the cockpit-window starfield on its own — no red shooting stars,
@@ -33,5 +34,15 @@ export default function SiteBackdrop() {
       <Backdrop pathname={pathname} />
       <FloatingStars />
     </>
+  );
+}
+
+// The backdrop renders on every page, so a WebGL failure here would otherwise
+// take down every route's content, not just the decoration.
+export default function SiteBackdrop() {
+  return (
+    <CanvasBoundary>
+      <Chooser />
+    </CanvasBoundary>
   );
 }

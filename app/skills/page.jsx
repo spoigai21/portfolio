@@ -11,6 +11,8 @@ export const metadata = pageMeta({
 export default function SkillsPage() {
   return (
     <main className="page">
+      {/* Cockpit view has no visible heading — see the note in app/work/page.jsx. */}
+      <h1 className="sr-only">Skills and tools Shayan Poigai builds with</h1>
       <Skills />
     </main>
   );

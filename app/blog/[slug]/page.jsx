@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { posts } from "@/lib/content";
 import { pageMeta } from "@/lib/site";
@@ -47,9 +48,11 @@ export default function PostPage({ params }) {
   return (
     <section className={`section ${styles.wrap}`}>
       <div className="container">
-        <a href="/blog" className={styles.back}>
+        {/* There is no /blog index route — this pointed at a 404. The writing
+            lives on /now, which is where the post links come from. */}
+        <Link href="/now" className={styles.back}>
           ← All writing
-        </a>
+        </Link>
 
         <article className={styles.article}>
           <div className={styles.meta}>
