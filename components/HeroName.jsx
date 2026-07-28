@@ -74,7 +74,7 @@ export default function HeroName() {
       {/* The animated letters below are one <span> per character, which reads
           as fragmented text to a crawler and to a screen reader. This carries
           the clean, unbroken name instead — same words, just not letter-split. */}
-      <span className="sr-only">{profile.name}</span>
+      <span className="sr-only">{profile.name}</span>{" "}
       <span ref={cometRef} className={styles.comet} aria-hidden="true" />
       {CHARS.map((ch, i) => {
         if (ch === " ") {
