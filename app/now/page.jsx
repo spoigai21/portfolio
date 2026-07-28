@@ -1,9 +1,12 @@
 import Writing from "@/components/Writing";
+import { pageMeta } from "@/lib/site";
 
-export const metadata = {
-  title: "Now — Shayan Poigai",
-  description: "What Shayan Poigai is actively working on right now.",
-};
+export const metadata = pageMeta({
+  title: "Now",
+  description:
+    "What Shayan Poigai is working on right now — backend AI features, agentic systems and the Model Context Protocol, and an e-commerce platform launch.",
+  path: "/now",
+});
 
 export default function NowPage() {
   return (

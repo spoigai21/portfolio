@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { posts } from "@/lib/content";
+import { pageMeta } from "@/lib/site";
 import styles from "../blog.module.css";
 
 export function generateStaticParams() {
@@ -8,11 +9,23 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }) {
   const post = posts.find((p) => p.slug === params.slug);
-  if (!post) return { title: "Post not found — Shayan Poigai" };
-  return {
-    title: `${post.title} — Shayan Poigai`,
-    description: post.summary || undefined,
-  };
+  if (!post) return { title: "Post not found", robots: { index: false, follow: true } };
+
+  const meta = pageMeta({
+    title: post.title,
+    description:
+      post.summary || `A post by Shayan Poigai on ${post.title.toLowerCase()}.`,
+    path: `/blog/${post.slug}`,
+    type: "article",
+  });
+
+  // Unwritten stubs render a "Coming soon" placeholder. Letting Google index
+  // near-empty pages is thin content that drags on the whole domain, so they
+  // stay out of the index (and out of the sitemap) until they have a body.
+  if (post.status === "draft" || !post.body) {
+    return { ...meta, robots: { index: false, follow: true } };
+  }
+  return meta;
 }
 
 function formatDate(iso) {
