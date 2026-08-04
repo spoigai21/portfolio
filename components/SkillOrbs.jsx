@@ -57,13 +57,36 @@ function useLogoTexture(url) {
   return texture;
 }
 
+// A sparse last row reads as a mistake rather than a grid, so pick the column
+// count in [min, max] that leaves the fullest bottom row — a row that divides
+// exactly wins outright. The range is bounded at both ends so a phone never
+// ends up with a desktop-width grid. Keeps the layout tidy however the skills
+// list grows.
+function fitCols(count, min, max) {
+  let best = min;
+  let bestFill = -1;
+  for (let c = min; c <= max; c++) {
+    const last = count % c;
+    const fill = last === 0 ? 1 : last / c;
+    if (fill > bestFill) {
+      best = c;
+      bestFill = fill;
+    }
+  }
+  return best;
+}
+
+// Column ranges per breakpoint: narrow phones stay 5–6 wide, everything else
+// 8–10, with fitCols picking whichever lands the tidiest bottom row.
+const NARROW_COLS = [5, 6];
+const WIDE_COLS = [8, 10];
+
 function useColumns() {
-  const [cols, setCols] = useState(5);
+  const [cols, setCols] = useState(() => fitCols(skills.length, ...WIDE_COLS));
   useEffect(() => {
     const update = () => {
-      const w = window.innerWidth;
-      // 20 orbs reflow to even grids: 4 wide (5 rows) narrow, 5 wide (4 rows) up.
-      setCols(w < 560 ? 4 : 5);
+      const range = window.innerWidth < 700 ? NARROW_COLS : WIDE_COLS;
+      setCols(fitCols(skills.length, ...range));
     };
     update();
     window.addEventListener("resize", update);

@@ -51,15 +51,6 @@
   font-weight: 400;
 }
 
-.subtitle {
-  margin-top: 6px;
-  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
-  letter-spacing: 0.34em;
-  text-indent: 0.34em;
-  color: rgba(33, 230, 255, 0.55);
-  animation: hudFlicker 4.2s ease-in-out infinite;
-}
-
 /* ---------- readouts (painted onto hull / console) ---------- */
 .readout {
   position: absolute;
@@ -180,20 +171,6 @@
   }
 }
 
-@keyframes hudFlicker {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  48%,
-  52% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 /* On short/narrow screens, thin the chrome so nothing crowds the orbs. */
 @media (max-width: 640px) {
   .scannerLabel {
@@ -210,7 +187,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .dot,
-  .subtitle,
   .ledOn {
     animation: none;
   }

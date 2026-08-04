@@ -168,10 +168,9 @@ export default function Cockpit() {
       {/* header — painted onto the top canopy frame / strut bow */}
       <header className={styles.header}>
         <div className={styles.title}>
-          <span className={styles.bracket}>[</span> LOADOUT{" "}
+          <span className={styles.bracket}>[</span> SKILLS MATRIX{" "}
           <span className={styles.bracket}>]</span>
         </div>
-        <div className={styles.subtitle}>{"// SKILL MATRIX · ONLINE"}</div>
       </header>
 
       {/* nav readout — painted onto the top-right hull */}

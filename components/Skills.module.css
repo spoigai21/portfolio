@@ -5,16 +5,19 @@
   margin: -28px 0 0;
 }
 
+/* Pulled up into the section's top padding so the orb cluster sits higher in
+   the cockpit window — the canopy chrome is viewport-fixed, so raising the
+   canvas in flow is what actually moves the orbs up behind it. */
 .canvasWrap {
   position: relative;
-  margin-top: 40px;
+  margin-top: -20px;
 }
 
 .canvas {
   position: relative;
   z-index: 1; /* orbs sit above the readout screen behind them */
   width: 100%;
-  height: clamp(380px, 56vh, 560px);
+  height: clamp(460px, 66vh, 640px);
   touch-action: none;
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -103,7 +106,7 @@
 
 .canvasFallback {
   width: 100%;
-  height: clamp(380px, 56vh, 560px);
+  height: clamp(460px, 66vh, 640px);
 }
 
 /* Cursor-following hologram tooltip. Positioning (left/top/display) is still set
