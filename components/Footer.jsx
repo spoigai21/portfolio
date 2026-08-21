@@ -23,6 +23,9 @@ export default function Footer() {
           <a href={profile.links.linkedin} target="_blank" rel="noreferrer">
             LinkedIn
           </a>
+          <a href={profile.links.leetcode} target="_blank" rel="noreferrer">
+            LeetCode
+          </a>
         </nav>
       </div>
     </footer>

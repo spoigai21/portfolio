@@ -4,7 +4,7 @@ import { pageMeta } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Contact",
   description:
-    "Get in touch with Shayan Poigai — software engineer based in the San Francisco Bay Area. Reach out by email, LinkedIn, or GitHub.",
+    "Get in touch with Shayan Poigai — software engineer based in the San Francisco Bay Area. Reach out by email, LinkedIn, GitHub, or LeetCode.",
   path: "/contact",
 });
 
