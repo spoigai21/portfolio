@@ -143,6 +143,11 @@ export default function ProjectsCarousel() {
                       Live ↗
                     </a>
                   )}
+                  {p.links.pypi && (
+                    <a href={p.links.pypi} target="_blank" rel="noreferrer">
+                      PyPI ↗
+                    </a>
+                  )}
                 </div>
               )}
             </div>
