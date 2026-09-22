@@ -103,13 +103,18 @@ export default function ProjectsCarousel() {
 
       <ol className={styles.track} ref={track} onScroll={onScroll}>
         {projects.map((p) => (
-          <li className={styles.slide} key={p.name}>
-            <ProjectMedia
-              video={p.video}
-              image={p.image}
-              alt={p.name}
-              onOpen={() => setLightbox({ video: p.video, name: p.name })}
-            />
+          <li
+            className={p.image || p.video ? styles.slide : `${styles.slide} ${styles.slideTextOnly}`}
+            key={p.name}
+          >
+            {(p.image || p.video) && (
+              <ProjectMedia
+                video={p.video}
+                image={p.image}
+                alt={p.name}
+                onOpen={() => setLightbox({ video: p.video, name: p.name })}
+              />
+            )}
 
             <div className={styles.body}>
               <div className={styles.top}>

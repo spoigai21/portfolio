@@ -87,6 +87,11 @@
   -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
+/* project with no image/video: body spans the full card */
+.slideTextOnly {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .media {
   position: relative;
   border-radius: 12px;
