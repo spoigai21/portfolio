@@ -7,11 +7,27 @@ import styles from "./ProjectsCarousel.module.css";
 // Media prefers a short looping clip of real usage, falls back to the still
 // screenshot, and finally to a labelled placeholder if neither loads. When a
 // video is present it plays muted as a preview; clicking opens the lightbox to
-// watch it full-size with sound.
-function ProjectMedia({ video, image, alt, onOpen }) {
+// watch it full-size with sound. A `poster` swaps the looping preview for a
+// still thumbnail, so the video only loads (from the start) once clicked.
+function ProjectMedia({ video, image, poster, alt, onOpen }) {
   const [videoFailed, setVideoFailed] = useState(!video);
   const [imgFailed, setImgFailed] = useState(!image);
+  const [posterFailed, setPosterFailed] = useState(!poster);
 
+  if (video && !posterFailed) {
+    return (
+      <button
+        type="button"
+        className={`${styles.media} ${styles.mediaButton}`}
+        onClick={onOpen}
+        aria-label={`Play ${alt} video with sound`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={poster} alt="" loading="lazy" onError={() => setPosterFailed(true)} />
+        <span className={styles.playBadge} aria-hidden="true">▶</span>
+      </button>
+    );
+  }
   if (!videoFailed) {
     return (
       <button
@@ -111,6 +127,7 @@ export default function ProjectsCarousel() {
               <ProjectMedia
                 video={p.video}
                 image={p.image}
+                poster={p.poster}
                 alt={p.name}
                 onOpen={() => setLightbox({ video: p.video, name: p.name })}
               />
