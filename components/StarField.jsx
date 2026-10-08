@@ -169,7 +169,7 @@ export default function StarField({ layer = "front" }) {
       aria-hidden="true"
     >
       <Canvas
-        dpr={[1, 2]}
+        dpr={[1, 1.25]}
         camera={{ fov: 60, position: [0, 0, 9] }}
         gl={{ antialias: true, alpha: true }}
       >

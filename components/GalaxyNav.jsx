@@ -256,7 +256,7 @@ function Sun({ glow, reduced }) {
 
       {/* hot emissive body — radial gradient + animated turbulence */}
       <mesh ref={core}>
-        <sphereGeometry args={[0.95, 64, 64]} />
+        <sphereGeometry args={[0.95, 40, 40]} />
         <shaderMaterial
           uniforms={bodyUniforms}
           vertexShader={sunVertex}
@@ -267,7 +267,7 @@ function Sun({ glow, reduced }) {
 
       {/* fresnel corona hugging the limb, pushed past the surface */}
       <mesh scale={1.32}>
-        <sphereGeometry args={[0.95, 48, 48]} />
+        <sphereGeometry args={[0.95, 32, 32]} />
         <shaderMaterial
           uniforms={coronaUniforms}
           vertexShader={sunVertex}
@@ -388,7 +388,7 @@ function Planet({ planet, index, rotRef, hovered, setHovered, reduced, glow }) {
           leave();
         }}
       >
-        <sphereGeometry args={[planet.size, 48, 48]} />
+        <sphereGeometry args={[planet.size, 32, 32]} />
         <meshStandardMaterial
           map={mat.map}
           emissive={mat.emissive || "#000000"}
@@ -531,7 +531,7 @@ export default function GalaxyNav() {
   return (
     <div className={styles.wrap}>
       <Canvas
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         camera={{ fov: 44, position: [0, 12, 23] }}
         gl={{ antialias: true, alpha: true }}
       >

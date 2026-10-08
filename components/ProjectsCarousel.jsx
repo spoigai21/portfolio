@@ -9,7 +9,11 @@ import styles from "./ProjectsCarousel.module.css";
 // video is present it plays muted as a preview; clicking opens the lightbox to
 // watch it full-size with sound. A `poster` swaps the looping preview for a
 // still thumbnail, so the video only loads (from the start) once clicked.
-function ProjectMedia({ video, image, poster, alt, onOpen }) {
+//
+// `active` is the card the carousel is parked on. Off-screen cards never mount
+// their <video>, so the page doesn't stream every clip (tens of MB) up front —
+// they show the still instead and start the clip when scrolled to.
+function ProjectMedia({ video, image, poster, alt, active, onOpen }) {
   const [videoFailed, setVideoFailed] = useState(!video);
   const [imgFailed, setImgFailed] = useState(!image);
   const [posterFailed, setPosterFailed] = useState(!poster);
@@ -36,15 +40,23 @@ function ProjectMedia({ video, image, poster, alt, onOpen }) {
         onClick={onOpen}
         aria-label={`Play ${alt} video with sound`}
       >
-        <video
-          src={video}
-          poster={image || undefined}
-          autoPlay
-          loop
-          muted
-          playsInline
-          onError={() => setVideoFailed(true)}
-        />
+        {active ? (
+          <video
+            src={video}
+            poster={image || undefined}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            onError={() => setVideoFailed(true)}
+          />
+        ) : image && !imgFailed ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={image} alt="" loading="lazy" onError={() => setImgFailed(true)} />
+        ) : (
+          <span className={styles.mediaIdle} aria-hidden="true" />
+        )}
         <span className={styles.playBadge} aria-hidden="true">▶</span>
       </button>
     );
@@ -118,7 +130,7 @@ export default function ProjectsCarousel() {
       </div>
 
       <ol className={styles.track} ref={track} onScroll={onScroll}>
-        {projects.map((p) => (
+        {projects.map((p, idx) => (
           <li
             className={p.image || p.video ? styles.slide : `${styles.slide} ${styles.slideTextOnly}`}
             key={p.name}
@@ -129,6 +141,7 @@ export default function ProjectsCarousel() {
                 image={p.image}
                 poster={p.poster}
                 alt={p.name}
+                active={idx === i}
                 onOpen={() => setLightbox({ video: p.video, name: p.name })}
               />
             )}
@@ -138,20 +151,6 @@ export default function ProjectsCarousel() {
                 <h3 className={styles.name}>{p.name}</h3>
                 <span className={styles.period}>{p.period}</span>
               </div>
-
-              <ul className={styles.bullets}>
-                {p.bullets.map((b, j) => (
-                  <li key={j}>{b}</li>
-                ))}
-              </ul>
-
-              {p.note && <p className={styles.note}>{p.note}</p>}
-
-              <ul className={styles.tags}>
-                {p.tags.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
 
               {p.links && (
                 <div className={styles.links}>
@@ -172,6 +171,20 @@ export default function ProjectsCarousel() {
                   )}
                 </div>
               )}
+
+              <ul className={styles.bullets}>
+                {p.bullets.map((b, j) => (
+                  <li key={j}>{b}</li>
+                ))}
+              </ul>
+
+              {p.note && <p className={styles.note}>{p.note}</p>}
+
+              <ul className={styles.tags}>
+                {p.tags.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
             </div>
           </li>
         ))}

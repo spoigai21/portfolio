@@ -109,6 +109,14 @@
   display: block;
 }
 
+/* stand-in while an off-screen card's clip is unmounted */
+.mediaIdle {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 6, 40, 0.6);
+}
+
 /* clickable video preview — resets default <button> styling */
 .mediaButton {
   padding: 0;
@@ -315,21 +323,33 @@
   padding: 4px 10px;
 }
 
+/* sits directly under the project title so GitHub/Live are visible without
+   scrolling the card; pills rather than bare text so they read as actions */
 .links {
   display: flex;
-  gap: 16px;
-  margin-top: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 2px;
 }
 
 .links a {
   font-family: var(--font-mono), monospace;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   color: var(--cyan);
-  transition: color 0.2s ease;
+  padding: 5px 12px;
+  border: 1px solid rgba(33, 230, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(33, 230, 255, 0.08);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .links a:hover {
   color: var(--text-bright);
+  background: rgba(33, 230, 255, 0.18);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(33, 230, 255, 0.35);
 }
 
 /* dots */

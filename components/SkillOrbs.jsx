@@ -391,7 +391,7 @@ export default function SkillOrbs() {
     <>
       <div className={styles.canvas}>
         <Canvas
-          dpr={[1, 2]}
+          dpr={[1, 1.5]}
           camera={{ fov: 50, position: [0, 0, 14] }}
           gl={{ antialias: true, alpha: true }}
         >
