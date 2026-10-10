@@ -179,7 +179,7 @@ h4 {
 /* Phones: the homepage is a flat document (see HomeIntro.module.css), not a
    viewport-filling scene — no backdrop renders behind it, so it carries its
    own background and sizes to its content. */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .hero-shell {
     min-height: 100svh;
     background: #0a0a0a;

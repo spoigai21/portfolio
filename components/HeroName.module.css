@@ -109,11 +109,13 @@
    flush left, the way the reference page sets WIKIPATROL. The planet system
    isn't rendered at this width (see GalaxyNavCanvas), so nothing sits under
    it and it joins the normal document flow. */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .name {
     position: static;
     transform: none;
     justify-content: flex-start;
+    max-width: 580px;
+    margin: 0 auto;
     padding: clamp(46px, 9vh, 74px) 20px 0;
     font-family: var(--font-condensed), Impact, sans-serif;
     font-weight: 400;

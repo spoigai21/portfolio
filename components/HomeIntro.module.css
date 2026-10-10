@@ -44,11 +44,13 @@
    title and a short intro. MobilePage renders the numbered sections under it. No galaxy behind any of it (SiteBackdrop skips the scene
    on "/" at this width); the contrast is what makes it readable on a phone.
    --------------------------------------------------------------------------- */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .brief {
     display: block; /* the desktop rule above hides it */
     position: relative;
     z-index: 5;
+    max-width: 580px; /* matches MobilePage's measure */
+    margin: 0 auto;
     padding: 0 20px;
   }
 

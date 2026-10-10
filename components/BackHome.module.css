@@ -34,7 +34,7 @@
 /* Phones: a smaller pill, tucked tighter into the corner. It's fixed and so
    reserves no space of its own — pages whose content reaches the top edge add
    their own clearance (see the mobile block in Skills.module.css). */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .back {
     top: 10px;
     left: 10px;

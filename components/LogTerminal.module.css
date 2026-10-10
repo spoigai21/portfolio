@@ -217,7 +217,7 @@
    Here it becomes an ordinary block in the document flow: no tilt (card text
    stays square to the reader), no nested scrolling. The cabin still shows
    behind it, and the frame, brackets and log header are unchanged. */
-@media (max-width: 760px) {
+@media (hover: none) and (pointer: coarse), (max-width: 760px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .journal {
     position: static;
     transform: none;

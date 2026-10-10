@@ -447,7 +447,7 @@
 }
 
 /* On small screens the panel spans most of the width, bottom-anchored. */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   /* The canvas is pulled up into the section padding on desktop, which on a
      phone slid the orb cluster under the fixed Home pill. Give it back the
      clearance instead: the matrix starts below the button. */

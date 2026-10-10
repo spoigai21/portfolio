@@ -41,7 +41,7 @@
 /* Phones: the Contact section of the single-page mobile site already lists
    GitHub, LinkedIn and LeetCode a few hundred pixels above this, so repeating
    them here is noise. The copyright line stays. */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .links {
     display: none;
   }

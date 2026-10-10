@@ -4,11 +4,31 @@
   display: none;
 }
 
-@media (max-width: 640px) {
+/* Four ways to be "a phone" here, because a width-only breakpoint missed most
+   of them. The planet navigation wants a mouse and a wide window; anything
+   else reads better as this document.
+     hover:none + pointer:coarse — no cursor to hover the planets with: any
+                            touch device, in any orientation. This is the one
+                            that actually catches phones; the three below are
+                            the geometric safety net.
+     max-width 640px      — a phone held upright, or a small window.
+     max-height 520px     — the same phone turned sideways: ~844x390, far too
+                            wide for a width test but far too short for the scene.
+     max-aspect-ratio 9/10 — anything taller than it is wide (unfolded
+                            foldables ~673x841, tablets in portrait). The planet
+                            system needs the viewport to be at least as wide as
+                            it is tall or its outer orbit falls off both edges.
+   Keep this in sync with the matching queries in SiteBackdrop.jsx and
+   GalaxyNavCanvas.jsx. */
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .page {
     display: block;
     position: relative;
     z-index: 5;
+    /* a tablet in portrait is 820px wide; without a measure the body text
+       would run the full width */
+    max-width: 580px;
+    margin: 0 auto;
     padding: 0 20px 64px;
   }
 

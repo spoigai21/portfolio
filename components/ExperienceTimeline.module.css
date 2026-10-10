@@ -175,7 +175,7 @@
 
 /* Phones: a 360px card overflows a 390px screen once the journal's padding is
    taken out, so the rail's cards track the viewport instead. */
-@media (max-width: 760px) {
+@media (hover: none) and (pointer: coarse), (max-width: 760px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .item {
     flex: 0 0 min(80vw, 360px);
     max-width: min(80vw, 360px);

@@ -16,7 +16,10 @@ const GalaxyNav = dynamic(() => import("./GalaxyNav"), {
 // the planets sit off-screen; HomeIntro's link list is the nav there instead
 // (see the mobile block in HomeIntro.module.css). Skipping the canvas also
 // spares the smallest devices a WebGL context they'd never see.
-const MOBILE = "(max-width: 640px)";
+// Same condition as the CSS (see the note in MobilePage.module.css): the
+// planets need a cursor and a window wider than it is tall. Touch devices and
+// short/portrait viewports get the document instead.
+const MOBILE = "(hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10)";
 
 export default function GalaxyNavCanvas() {
   // `null` until measured so the server render and the first client render

@@ -378,7 +378,7 @@
   transform: scale(1.2);
 }
 
-@media (max-width: 760px) {
+@media (hover: none) and (pointer: coarse), (max-width: 760px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .slide {
     grid-template-columns: 1fr;
     gap: 18px;
@@ -390,7 +390,7 @@
 
 /* Phones: give the card the full width of the flattened journal, keeping just
    enough of the next card visible to show the track continues. */
-@media (max-width: 640px) {
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
   .slide {
     flex: 0 0 92%;
   }

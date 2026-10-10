@@ -27,7 +27,9 @@ function Backdrop({ pathname }) {
 function useMobile() {
   const [mobile, setMobile] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
+    const mq = window.matchMedia(
+      "(hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10)"
+    );
     const sync = () => setMobile(mq.matches);
     sync();
     mq.addEventListener("change", sync);
