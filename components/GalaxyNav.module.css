@@ -79,3 +79,12 @@
   transform: translateY(-2px);
 }
 
+
+/* Phones don't render the planet system (GalaxyNavCanvas skips WebGL there),
+   and this wrapper is 100svh tall — left in the flow it pushed the whole
+   mobile homepage one screen down. It takes no space at all below 640px. */
+@media (max-width: 640px) {
+  .wrap {
+    display: none;
+  }
+}

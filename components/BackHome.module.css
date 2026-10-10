@@ -30,3 +30,21 @@
   font-size: 1rem;
   line-height: 1;
 }
+
+/* Phones: a smaller pill, tucked tighter into the corner. It's fixed and so
+   reserves no space of its own — pages whose content reaches the top edge add
+   their own clearance (see the mobile block in Skills.module.css). */
+@media (max-width: 640px) {
+  .back {
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    padding: 6px 12px 6px 10px;
+    gap: 6px;
+  }
+
+  .arrow {
+    font-size: 0.85rem;
+  }
+}

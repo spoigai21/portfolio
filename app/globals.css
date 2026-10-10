@@ -175,3 +175,13 @@ h4 {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* Phones: the homepage is a flat document (see HomeIntro.module.css), not a
+   viewport-filling scene — no backdrop renders behind it, so it carries its
+   own background and sizes to its content. */
+@media (max-width: 640px) {
+  .hero-shell {
+    min-height: 100svh;
+    background: #0a0a0a;
+  }
+}

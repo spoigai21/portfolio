@@ -4,6 +4,7 @@ import {
   Playfair_Display,
   Syne,
   Bree_Serif,
+  Bebas_Neue,
 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import {
@@ -46,6 +47,14 @@ const syne = Syne({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--font-syne",
+  display: "swap",
+});
+
+// Tall condensed display face — used only by the phone homepage.
+const bebas = Bebas_Neue({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-condensed",
   display: "swap",
 });
 
@@ -122,7 +131,7 @@ export default function RootLayout({ children }) {
         <JsonLd />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable}`}
+        className={`${spaceGrotesk.variable} ${spaceMono.variable} ${playfair.variable} ${syne.variable} ${breeSerif.variable} ${bebas.variable}`}
       >
         {/* Backdrop (galaxy, or the void on /contact) + chrome for every page */}
         <SiteBackdrop />

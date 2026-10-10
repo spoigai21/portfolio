@@ -1,3 +1,9 @@
+/* ---------------------------------------------------------------------------
+   Desktop: the planets are the navigation, so everything here is either hidden
+   or visually hidden. Only the phone block at the bottom of this file turns it
+   into a visible page.
+   --------------------------------------------------------------------------- */
+
 /* Hidden the same way the old in-canvas fallback nav was, but server-rendered
    and revealed whenever a keyboard user tabs into it. */
 .nav {
@@ -26,4 +32,31 @@
   overflow: visible;
   background: rgba(12, 6, 40, 0.9);
   border-radius: 8px;
+}
+
+/* the briefing lines don't exist on desktop at all */
+.brief {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Phones: the masthead of a single scrolling document — oversized display
+   title and a short intro. MobilePage renders the numbered sections under it. No galaxy behind any of it (SiteBackdrop skips the scene
+   on "/" at this width); the contrast is what makes it readable on a phone.
+   --------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .brief {
+    display: block; /* the desktop rule above hides it */
+    position: relative;
+    z-index: 5;
+    padding: 0 20px;
+  }
+
+  .now {
+    margin: 16px 0 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #a9a9a4;
+  }
+
 }

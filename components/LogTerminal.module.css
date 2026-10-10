@@ -209,3 +209,41 @@
     animation: none;
   }
 }
+
+/* ---------- phones: the console lies flat and the page scrolls ----------
+   The desktop journal is a fixed, viewport-bounded panel tilted 14° with its
+   own inner scrollbar. On a phone that box is shorter than a single project
+   card, so cards were cropped top and bottom and the page itself never moved.
+   Here it becomes an ordinary block in the document flow: no tilt (card text
+   stays square to the reader), no nested scrolling. The cabin still shows
+   behind it, and the frame, brackets and log header are unchanged. */
+@media (max-width: 760px) {
+  .journal {
+    position: static;
+    transform: none;
+    width: auto;
+    margin: 0 clamp(10px, 3vw, 18px) clamp(28px, 7vh, 56px);
+    top: auto;
+    bottom: auto;
+    border-radius: 12px;
+  }
+
+  /* the tilt's contact shadow and light bar only read on the angled plane */
+  .journal::before,
+  .journal::after {
+    display: none;
+  }
+
+  .scroll {
+    overflow: visible;
+    flex: 0 1 auto;
+  }
+
+  /* the header rides with the page rather than pinning inside a fixed box */
+  .logHead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: linear-gradient(rgba(6, 10, 20, 0.97), rgba(6, 10, 20, 0.92));
+  }
+}

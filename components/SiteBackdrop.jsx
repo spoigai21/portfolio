@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import CanvasBoundary from "./CanvasBoundary";
 import Galaxy from "./Galaxy";
@@ -20,8 +21,25 @@ function Backdrop({ pathname }) {
   return <Galaxy />;
 }
 
+// The phone homepage is a flat, high-contrast document (see
+// HomeIntro.module.css) — a galaxy behind that text is noise, not atmosphere,
+// so phones get no backdrop on "/" at all. Every other route keeps its scene.
+function useMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const sync = () => setMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return mobile;
+}
+
 function Chooser() {
   const pathname = usePathname();
+  const mobile = useMobile();
+  if (mobile && pathname === "/") return null;
   if (pathname === "/contact") return <ContactVoid />;
   // /skills gets the cockpit-window starfield on its own — no red shooting stars,
   // so nothing bright ever streaks across the skill orbs in the center.

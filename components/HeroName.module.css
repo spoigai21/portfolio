@@ -104,3 +104,27 @@
     display: none;
   }
 }
+
+/* Phones: the name is the page's masthead — tall condensed display type,
+   flush left, the way the reference page sets WIKIPATROL. The planet system
+   isn't rendered at this width (see GalaxyNavCanvas), so nothing sits under
+   it and it joins the normal document flow. */
+@media (max-width: 640px) {
+  .name {
+    position: static;
+    transform: none;
+    justify-content: flex-start;
+    padding: clamp(46px, 9vh, 74px) 20px 0;
+    font-family: var(--font-condensed), Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(3rem, 16vw, 4.4rem);
+    letter-spacing: 0.015em;
+    line-height: 0.92;
+    z-index: 5;
+  }
+
+  /* the inter-word gap is sized for the desktop tracking */
+  .space {
+    width: 0.26em;
+  }
+}

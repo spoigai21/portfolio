@@ -80,6 +80,9 @@ export default function LogTerminal({ children }) {
       el.addEventListener("scroll", schedule, { passive: true })
     );
     scroller.addEventListener("scroll", schedule, { passive: true });
+    // on phones the journal is flattened into the page (see the mobile block in
+    // LogTerminal.module.css), so the window is what scrolls, not .scroll
+    window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     schedule();
     const t = setTimeout(schedule, 300);
@@ -89,6 +92,7 @@ export default function LogTerminal({ children }) {
       clearTimeout(t);
       hScrollers.forEach((el) => el.removeEventListener("scroll", schedule));
       scroller.removeEventListener("scroll", schedule);
+      window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
   }, []);
