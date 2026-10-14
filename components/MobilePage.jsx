@@ -22,6 +22,7 @@ const general = experience.filter((r) => !isResearch(r)).reverse();
 
 // The five worth leading with, in the order they should read.
 const FEATURED = [
+  "SceneSafe",
   "WikiPatrol",
   "CineInfer",
   "AdFill",
