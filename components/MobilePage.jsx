@@ -20,15 +20,8 @@ const isResearch = (role) => /research/i.test(role.role);
 const research = experience.filter(isResearch).reverse();
 const general = experience.filter((r) => !isResearch(r)).reverse();
 
-// The five worth leading with, in the order they should read.
-const FEATURED = [
-  "SceneSafe",
-  "WikiPatrol",
-  "CineInfer",
-  "AdFill",
-  "Swing Stock Analysis Agent",
-  "Fusion Bench",
-];
+// The ones worth leading with on a phone, in the order they should read.
+const FEATURED = ["SceneSafe", "WikiPatrol", "CineInfer", "Fusion Bench"];
 const featured = FEATURED.map((name) =>
   projects.find((p) => p.name === name)
 ).filter(Boolean);
