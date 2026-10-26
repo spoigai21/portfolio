@@ -18,3 +18,12 @@
   mix-blend-mode: screen;
   will-change: transform;
 }
+
+/* The glow trails a mouse, so touch devices never see it — but at 420px wide
+   it still stuck 15px past each edge of a 390px screen, which is enough to
+   let the whole page slide sideways. Take it out of the layout entirely. */
+@media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
+  .glow {
+    display: none;
+  }
+}

@@ -21,7 +21,7 @@ const research = experience.filter(isResearch).reverse();
 const general = experience.filter((r) => !isResearch(r)).reverse();
 
 // The ones worth leading with on a phone, in the order they should read.
-const FEATURED = ["SceneSafe", "WikiPatrol", "CineInfer", "Fusion Bench"];
+const FEATURED = ["SceneSafe", "Fusion Bench", "WikiPatrol"];
 const featured = FEATURED.map((name) =>
   projects.find((p) => p.name === name)
 ).filter(Boolean);

@@ -110,6 +110,14 @@
    isn't rendered at this width (see GalaxyNavCanvas), so nothing sits under
    it and it joins the normal document flow. */
 @media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
+  /* the comet's run ends at (name width + 40px), which on a phone is past the
+     right edge — and `fill: forwards` leaves it parked there, widening the
+     page. The letters reveal on their own timers, so dropping it costs
+     nothing here. */
+  .comet {
+    display: none;
+  }
+
   .name {
     position: static;
     transform: none;

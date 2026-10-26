@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { projects } from "@/lib/content";
+import { desktopProjects as projects } from "@/lib/content";
 import styles from "./ProjectsCarousel.module.css";
 
 // Media prefers a short looping clip of real usage, falls back to the still

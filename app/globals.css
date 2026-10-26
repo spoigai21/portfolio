@@ -180,6 +180,14 @@ h4 {
    viewport-filling scene — no backdrop renders behind it, so it carries its
    own background and sizes to its content. */
 @media (hover: none) and (pointer: coarse), (max-width: 640px), (max-height: 520px), (max-aspect-ratio: 9/10) {
+  /* a phone has no horizontal axis to spare: clip any future stray element
+     rather than letting it drag the page off-centre */
+  html,
+  body {
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
+
   .hero-shell {
     min-height: 100svh;
     background: #0a0a0a;
